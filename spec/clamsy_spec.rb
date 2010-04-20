@@ -11,7 +11,8 @@ describe "Clamsy" do
       Clamsy.process(contexts, @example_files[example], @tmp_pdf.path)
       generated_content = `pdf2ps #{@tmp_pdf.path} -`.grep(/^[^%][^%]?/)
       expected_content = `pdf2ps #{@expected_pdfs[example]} -`.grep(/^[^%][^%]?/)
-      (generated_content - expected_content).size.should == 0
+      (generated_content - expected_content).should == []
+      (expected_content - generated_content).should == []
     end
   end
 
@@ -19,32 +20,32 @@ describe "Clamsy" do
     @tmp_pdf.unlink
   end
 
-#  it 'should do #{...} plain text replacement' do
-#    @check_processing_yields_text[
-#      context = {:someone => 'Peter', :mood => 'Happy'},
-#      example = :plain_text
-#    ]
-#  end
-#
-#  it 'should do ${...} escaped (santized) replacement' do
-#    @check_processing_yields_text[
-#      context = {:someone => '<Peter>', :mood => '<Happy>'},
-#      example = :escaped_text
-#    ]
-#  end
+  it 'should do #{...} plain text replacement' do
+    @check_processing_yields_text[
+      context = {:someone => 'Peter', :mood => 'Happy'},
+      example = :plain_text
+    ]
+  end
 
-#  it 'should do {? ... ?} embedded ruby statements' do
-#    @someone = Class.new do
-#      attr_reader :name, :mood
-#      def initialize(name, mood)
-#        @name, @mood = name, mood
-#      end
-#    end
-#    @check_processing_yields_text[
-#      context = {:everyone => [@someone.new('Peter','Happy'), @someone.new('Jane','Sad')]},
-#      example = :embedded_ruby
-#    ]
-#  end
+  it 'should do ${...} escaped (santized) replacement' do
+    @check_processing_yields_text[
+      context = {:someone => '<Peter>', :mood => '<Happy>'},
+      example = :escaped_text
+    ]
+  end
+
+  it 'should do {? ... ?} embedded ruby statements' do
+    @someone = Class.new do
+      attr_reader :name, :mood
+      def initialize(name, mood)
+        @name, @mood = name, mood
+      end
+    end
+    @check_processing_yields_text[
+      context = {:everyone => [@someone.new('Peter','Happy'), @someone.new('Jane','Sad')]},
+      example = :embedded_ruby
+    ]
+  end
 
   it 'should concat multiple contexts processing to a single pdf' do
     @check_processing_yields_text[
