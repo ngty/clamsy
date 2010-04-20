@@ -10,7 +10,9 @@ begin
     gem.email = "ngty77@gmail.com"
     gem.homepage = "http://github.com/ngty/clumsy"
     gem.authors = ["NgTzeYang"]
-    gem.add_development_dependency "bacon", ">= 0"
+    gem.add_dependency "rubyzip", "= 0.9.4"
+    gem.add_development_dependency "bacon", ">= 1.1.0"
+    gem.add_development_dependency "differ", ">= 0.1.1"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
