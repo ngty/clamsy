@@ -1,0 +1,6 @@
+=== 0.0.1 (Apr 21, 2010)
+
+= 1st official (yet embarrassing) release
+
+* support to generate a single pdf from multiple contexts using a single odt template [#ngty]
+
