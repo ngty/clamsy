@@ -1,22 +1,22 @@
 require 'spec_helper'
 
-describe "Clumsy" do
+describe "Clamsy" do
 
   before do
-    @tmp_pdf = Tempfile.new('clumsy_pdf')
+    @tmp_pdf = Tempfile.new('clamsy_pdf')
     @example_file = lambda {|name| File.join(File.dirname(__FILE__), 'odts', "#{name}_example.odt") }
     @check_processing_yields_text = lambda do |contexts, example_name, expected_text|
       puts @tmp_pdf.path
-      Clumsy.process(contexts, @example_file[example_name], @tmp_pdf.path)
+      Clamsy.process(contexts, @example_file[example_name], @tmp_pdf.path)
 #      #puts @tmp_pdf.read
-#      File.open('/home/ty.archlinux/dev/ty/clumsy/spec/pdfs/plain_text_example.pdf', 'r') {|fh|
+#      File.open('/home/ty.archlinux/dev/ty/clamsy/spec/pdfs/plain_text_example.pdf', 'r') {|fh|
 #        puts Differ.diff(fh.read, @tmp_pdf.read)
 #      }
 #      `cp #{@tmp_pdf.path} /tmp/bcd.pdf`
 #      puts `pdf2ps #{@tmp_pdf.path} /tmp/a`
 #      # puts `cat /tmp/a`
 #      puts `ps2ascii /tmp/a`
-#      puts `diff /home/ty.archlinux/dev/ty/clumsy/spec/pdfs/plain_text_example.ps /tmp/a`
+#      puts `diff /home/ty.archlinux/dev/ty/clamsy/spec/pdfs/plain_text_example.ps /tmp/a`
 #      puts File.exists?(@tmp_pdf.path) ? '... exists !!' : '... missing !!' # DEBUG
 #      system("cp #{@tmp_pdf.path} /tmp/abc")
 #      puts `ps2ascii /tmp/abc`

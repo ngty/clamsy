@@ -4,11 +4,11 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "clumsy"
+    gem.name = "clamsy"
     gem.summary = %Q{TODO: one-line summary of your gem}
     gem.description = %Q{TODO: longer description of your gem}
     gem.email = "ngty77@gmail.com"
-    gem.homepage = "http://github.com/ngty/clumsy"
+    gem.homepage = "http://github.com/ngty/clamsy"
     gem.authors = ["NgTzeYang"]
     gem.add_dependency "rubyzip", "= 0.9.4"
     gem.add_development_dependency "bacon", ">= 1.1.0"
@@ -74,7 +74,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "clumsy #{version}"
+  rdoc.title = "clamsy #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

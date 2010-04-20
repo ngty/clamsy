@@ -2,9 +2,9 @@ require 'ftools'
 require 'digest/md5'
 require 'tempfile'
 require 'zip/zip'
-require 'clumsy/tenjin'
+require 'clamsy/tenjin'
 
-module Clumsy
+module Clamsy
 
   class << self
 

@@ -1,4 +1,4 @@
-= clumsy
+= clamsy
 
 Description goes here.
 

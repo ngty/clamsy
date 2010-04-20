@@ -1,4 +1,4 @@
-module Clumsy
+module Clamsy
 
   # NOTE: This is a slightly hacked version of the awesome tenjin template engine
   # (http://github.com/kwatch/tenjin) to support the following:
