@@ -28,7 +28,7 @@ describe "Clamsy" do
   end
 
   after do
-    # [@tmp_pdf, @tmp_txt].map(&:unlink)
+    @tmp_pdf.unlink
   end
 
   it 'should do #{...} plain text replacement' do
