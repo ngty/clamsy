@@ -12,7 +12,6 @@ module Clamsy
       begin
         @template_odt = TemplateOdt.new(template_odt)
         odts = [contexts].flatten.map {|ctx| @template_odt.render(ctx) }
-        puts final_pdf
         Shell.print_odts_to_pdf(odts, final_pdf)
       ensure
         @template_odt.trash_tmp_files
@@ -101,12 +100,10 @@ module Clamsy
         def print_odts_to_pdf(from_odts, to_pdf)
           begin
             tmp_ps = get_tmp_file(File.basename(to_pdf, '.pdf')).path
-            puts "#{PS_TO_PDF_CMD} #{tmp_ps} #{to_pdf}" # DEBUG
             system([
               "#{CAT_CMD} #{convert_odts_to_pss(from_odts).join(' ')} > #{tmp_ps}",
               "#{PS_TO_PDF_CMD} #{tmp_ps} #{to_pdf}"
             ].join(' && '))
-            puts File.exists?(to_pdf) ? 'exists !!' : 'missing !!' # DEBUG
           ensure
             trash_tmp_files
           end
