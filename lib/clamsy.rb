@@ -25,7 +25,7 @@ module Clamsy
     module HasTrashableTempFiles
 
       def trash_tmp_files
-        (@trashable_tmp_files || []).map(&:unlink)
+        (@trashable_tmp_files || []).select {|f| f.path }.map(&:unlink)
       end
 
       def get_tmp_file(file_name)
