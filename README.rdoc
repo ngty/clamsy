@@ -1,5 +1,26 @@
 = clamsy
 
+= Pre-requisites =
+
+1. Archlinux
+
+   * Installing packages:
+     $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
+
+   * Setting up the cups-pdf virtual printer by following instructions on:
+     http://wiki.archlinux.org/index.php/CUPS#Configuring_CUPS-PDF_virtual_printer
+
+   * Making sure cups is running:
+     $ sudo /etc/rc.d/cups start
+
+2. Ubuntu (to-be-updated)
+
+   *
+
+3. Mac (to-be-updated)
+
+   *
+
 Description goes here.
 
 == Note on Patches/Pull Requests
