@@ -7,9 +7,9 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
             |        |-- under the hood, we are making system calls like ooffice,
             |            ps2pdf & pdf2ps, etc.
             |
-            |-- setup isn't straight forward, need to instead a couple of packages
-                (depending on ur platform) & even manual setting up of cups printer
-                is needed
+            |-- setup isn't straight forward, need to install a couple of packages
+                (how bad it is depends on ur platform) & even manual setting up of
+                cups printer is needed
 
 == Pre-requisites
 
