@@ -6,11 +6,10 @@ describe "Clamsy" do
 
   before do
     @check_processing_yields_text = lambda do |contexts, example|
-      generated_pdf = get_tmp_file('clamsy_pdf').path
-      template_odt = get_template_odt(example)
-      expected_pdf = get_expected_pdf(example)
-      Clamsy.process(contexts, template_odt, generated_pdf)
-      get_comparable_content(generated_pdf).should == get_comparable_content(expected_pdf)
+      generated_pdf = tmp_file('clamsy_pdf').path
+      expected_content = comparable_content(expected_pdf(example))
+      Clamsy.process(contexts, template_odt(example), generated_pdf)
+      comparable_content(generated_pdf).should.equal expected_content
     end
   end
 
