@@ -2,22 +2,20 @@ require 'spec_helper'
 
 describe "Clamsy" do
 
+  behaves_like 'has standard files support'
+
   before do
-    @tmp_pdf = Tempfile.new('clamsy_pdf')
-    @data_files = lambda {|file| File.join(File.dirname(__FILE__), 'data', file) }
-    @example_files = lambda {|name| @data_files["#{name}_example.odt"] }
-    @expected_pdfs = lambda {|name| @data_files["#{name}_example.pdf"] }
     @check_processing_yields_text = lambda do |contexts, example|
-      Clamsy.process(contexts, @example_files[example], @tmp_pdf.path)
-      generated_content = `pdf2ps #{@tmp_pdf.path} -`.grep(/^[^%][^%]?/)
-      expected_content = `pdf2ps #{@expected_pdfs[example]} -`.grep(/^[^%][^%]?/)
-      (generated_content - expected_content).should == []
-      (expected_content - generated_content).should == []
+      generated_pdf = get_tmp_file('clamsy_pdf').path
+      template_odt = get_template_odt(example)
+      expected_pdf = get_expected_pdf(example)
+      Clamsy.process(contexts, template_odt, generated_pdf)
+      get_comparable_content(generated_pdf).should == get_comparable_content(expected_pdf)
     end
   end
 
   after do
-    @tmp_pdf.unlink
+    trash_tmp_files
   end
 
   it 'should do #{...} plain text replacement' do
