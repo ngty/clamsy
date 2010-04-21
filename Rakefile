@@ -11,8 +11,8 @@ begin
     gem.homepage = "http://github.com/ngty/clamsy"
     gem.authors = ["NgTzeYang"]
     gem.add_dependency "rubyzip", "= 0.9.4"
+    gem.add_dependency "rghost", "= 0.8.7.2"
     gem.add_development_dependency "bacon", ">= 1.1.0"
-    gem.add_development_dependency "differ", ">= 0.1.1"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

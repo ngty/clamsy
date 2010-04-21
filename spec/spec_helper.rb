@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bacon'
 require 'differ'
 require 'tempfile'
+require 'digest/md5'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
@@ -19,7 +20,7 @@ shared 'has standard files support' do
       data_file("#{name}_example.pdf")
     end
     def comparable_content(file)
-      `pdf2ps #{file} -`.grep(/^[^%][^%]?/).
+      RGhost::Convert.new(file).to(:ps).read.grep(/^[^%][^%]?/).
         reject {|line| line =~ /^q\[\-?\d+( \-?\d+){5}\]concat\n$/ }
     end
     def trash_tmp_files
