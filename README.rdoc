@@ -15,14 +15,14 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
 
 1. Archlinux
 
-   * Installing packages:
-     $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
+ * Installing packages:
+   $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
 
-   * Setting up the cups-pdf virtual printer by following instructions @
-     http://wiki.archlinux.org/index.php/CUPS#Configuring_CUPS-PDF_virtual_printer
+ * Setting up the cups-pdf virtual printer by following instructions @
+   http://wiki.archlinux.org/index.php/CUPS#Configuring_CUPS-PDF_virtual_printer
 
-   * Making sure cups is running:
-     $ sudo /etc/rc.d/cups start
+ * Making sure cups is running:
+   $ sudo /etc/rc.d/cups start
 
 2. Ubuntu (to-be-updated)
 
@@ -30,12 +30,12 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
 
 == TODO
 
-   * add support for configuration, eg. Clamsy.configure {|config| ... }
+* add support for configuration, eg. Clamsy.configure {|config| ... }
 
-   * implement strategy to check for missing commands & prompt user to install packages
+* implement strategy to check for missing commands & prompt user to install packages
 
-   * instead of using system to call the various commands, maybe we write extensions
-     for these foreign function calls (eg. using ffi ??)
+* instead of using system to call the various commands, maybe we write extensions
+ for these foreign function calls (eg. using ffi ??)
 
 == Note on Patches/Pull Requests
 
