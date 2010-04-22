@@ -4,16 +4,65 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
 
   clamsy = clumsy + shellish
             |        |
-            |        |-- under the hood, we are making system calls like ooffice,
-            |            ps2pdf & pdf2ps, etc.
+            |        |-- under the hood, we are making system calls to ooffice &
+            |            cups server needs to be running
             |
-            .-- setup isn't straight forward, need to install a couple of packages
+            |-- setup isn't straight forward, need to install a couple of packages
                 (how bad it is depends on ur platform) & even manual setting up of
                 cups printer is needed
 
-== Using It (sorry, still WIP for more decent examples)
+== Templating in Action (1)
 
-#1. Generating single context pdf:
+First, u need to have an odt file that serves as the template. There is nothing special
+about this odt file, u can simply create it with openoffice. In order for it to become
+a template, simply craft ur odt with placeholders & embedded ruby code.
+
+Under the hood, we are using a slightly hacked version of the awesome tenjin template
+engine (http://www.kuwata-lab.com/tenjin/) to do the render. Here's a quick example of
+a template odt:
+
+  #{@company_full_name}
+  #{@company_address_line_1}
+  #{@company_address_line_2}
+
+  S/N  Item Description       Amount (SGD)
+  {? @items.each_with_index do |item, i| ?}
+  #{i} #{item.description}    #{amount}
+  {? end ?}
+                       Total  #{total}
+
+Assuming the context has already been defined (see coding section for how to do it),
+here's the generated pdf:
+
+  Monster Inc
+  Planet Mars, Street xyz,
+  Postal Code 009900
+
+  S/N  Item Description       Amount (SGD)
+
+  1    x2 Bags of Prawns      1000
+  2    x2 Bags of Lobsters    2000
+
+                       Total  3000
+
+Here's some tips for template writing:
+
+* '{? ... ?}' represents embedded Ruby statement (this differs from the vanilla tenjin)
+* '#{ ... }' represents embedded Ruby expression
+* '${ ... }' represents embedded Ruby expression which is to be escaped (eg. '& < > "'
+  are escaped to '&amp; &lt; &gt; &quot;')
+
+== Coding in Action (2)
+
+Given the following very simple template odt:
+
+  -----------------------------
+
+    #{@someone} is #{mood} ...
+
+  -------------------- page 1 -
+
+1. Generating single context pdf:
 
   Clamsy.process(
     {:someone => 'Peter', :mood => 'Happy'},
@@ -21,7 +70,15 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
     path_to_final_pdf
   )
 
-#2. Generating multi-contexts pdf:
+We get:
+
+  -----------------------------
+
+    Peter is Happy ...
+
+  -------------------- page 1 -
+
+2. Generating multi-contexts pdf:
 
   Clamsy.process(
     [
@@ -32,24 +89,43 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
     path_to_final_pdf
   )
 
+We get:
+
+  -----------------------------
+
+    Peter is Happy ...
+
+  -------------------- page 1 -
+  -----------------------------
+
+    Jane is Sad ...
+
+  -------------------- page 1 -
+
+As you can see, (whether you like it or not) the pages are merely concatenated
+together !!
+
 == Pre-requisites
 
-#1. Archlinux
+1. Archlinux
 
-   * Installing packages:
-     $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
+  * Installing packages:
+    $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
 
-   * Setting up the cups-pdf virtual printer by following instructions @
-     http://wiki.archlinux.org/index.php/CUPS#Configuring_CUPS-PDF_virtual_printer
+  * Setting up the cups-pdf virtual printer by following instructions @
+    http://wiki.archlinux.org/index.php/CUPS#Configuring_CUPS-PDF_virtual_printer
 
-   * Making sure cups is running:
-     $ sudo /etc/rc.d/cups start
+  * Making sure cups is running:
+    $ sudo /etc/rc.d/cups start
 
-#2. Ubuntu (to-be-updated)
+2. Ubuntu (to-be-updated)
 
-#3. Mac (to-be-updated)
+3. Mac (to-be-updated)
 
 == TODO
+
+* add support for replacing pictures in template odt (eg. we want the organization's
+  logo to be displayed instead of the developer's avatar!!)
 
 * add support for configuration, eg. Clamsy.configure {|config| ... }
 
