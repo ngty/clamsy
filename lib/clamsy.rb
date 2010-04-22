@@ -98,7 +98,7 @@ module Clamsy
             tmp_ps = tmp_file(File.basename(to_pdf, '.pdf'))
             from_odts.map {|odt| tmp_ps << odt_to_ps_stream(odt) }
             tmp_ps.close
-            gs_convert(:pdf, tmp_ps, to_pdf)
+            gs_convert(:pdf, tmp_ps.path, to_pdf)
           ensure
             trash_tmp_files
           end
@@ -107,30 +107,22 @@ module Clamsy
         private
 
           def odt_to_ps_stream(odt)
-            odt_path = to_path(odt)
+            ensure_file_exists!(odt_path = odt.path)
             pdf_path = File.join(PDF_OUTPUT_DIR, File.basename(odt_path, '.odt')) + '.pdf'
             system("#{ODT_TO_PDF_CMD} #{odt_path}")
             gs_convert(:ps, pdf_path)
           end
 
-          def gs_convert(format, src_file, dest_file=nil)
-            ensure_file_exists(src_path = to_path(src_file))
-            if dest_file
-              RGhost::Convert.new(src_path).to(format, :filename => to_path(dest_file))
-              dest_file
-            else
-              RGhost::Convert.new(src_path).to(format).read
-            end
+          def gs_convert(format, src_path, dest_path=nil)
+            ensure_file_exists!(src_path)
+            method, opts = dest_path ? [:path, {:filename => dest_path}] : [:read, {}]
+            RGhost::Convert.new(src_path).to(format, opts).send(method)
           end
 
-          def ensure_file_exists(file)
-            path, flag = to_path(file), false
-            0.upto(10) {|i| File.exists?(path) ? (flag = true; break) : sleep(1) }
-            flag or raise MissingFileError.new(path)
-          end
-
-          def to_path(file)
-            file.path rescue file
+          def ensure_file_exists!(file_path)
+            exist_flg = false
+            0.upto(10) {|i| File.exists?(file_path) ? (exist_flg = true; break) : sleep(1) }
+            exist_flg or raise MissingFileError.new(file_path)
           end
 
       end
