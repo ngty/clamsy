@@ -11,7 +11,7 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
                 (how bad it is depends on ur platform) & even manual setting up of
                 cups printer is needed
 
-== Using It
+== Using It (sorry, still WIP for more decent examples)
 
 #1. Generating single context pdf:
 
@@ -53,10 +53,9 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
 
 * add support for configuration, eg. Clamsy.configure {|config| ... }
 
-* implement strategy to check for missing commands & prompt user to install packages
+* automate cups-pdf printer setup
 
-* instead of using system to call the various commands, maybe we write extensions
-  for these foreign function calls (eg. using ffi ??)
+* avoid making system call to 'ooffice'
 
 == Note on Patches/Pull Requests
 
