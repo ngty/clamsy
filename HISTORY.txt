@@ -1,3 +1,9 @@
+=== 0.0.2 (Apr 22, 2010)
+
+= 2nd official (yet still as embarrassing) release
+
+* instead of using system ps2pdf & pdf2ps commands, we use rghost gem to take care of ps/pdf conversions [#ngty]
+
 === 0.0.1 (Apr 21, 2010)
 
 = 1st official (yet embarrassing) release
