@@ -5,7 +5,7 @@ describe "Clamsy" do
   behaves_like 'has standard files support'
 
   before do
-    @check_processing_yields_text = lambda do |contexts, example|
+    @check_processing_yields_content = lambda do |contexts, example|
       generated_pdf = tmp_file('clamsy_pdf').path
       expected_content = comparable_content(expected_pdf(example))
       Clamsy.process(contexts, template_odt(example), generated_pdf)
@@ -18,14 +18,14 @@ describe "Clamsy" do
   end
 
   it 'should do #{...} plain text replacement' do
-    @check_processing_yields_text[
+    @check_processing_yields_content[
       context = {:someone => 'Peter', :mood => 'Happy'},
       example = :plain_text
     ]
   end
 
   it 'should do ${...} escaped (santized) replacement' do
-    @check_processing_yields_text[
+    @check_processing_yields_content[
       context = {:someone => '<Peter>', :mood => '<Happy>'},
       example = :escaped_text
     ]
@@ -38,14 +38,14 @@ describe "Clamsy" do
         @name, @mood = name, mood
       end
     end
-    @check_processing_yields_text[
+    @check_processing_yields_content[
       context = {:everyone => [@someone.new('Peter','Happy'), @someone.new('Jane','Sad')]},
       example = :embedded_ruby
     ]
   end
 
   it 'should concat multiple contexts processing to a single pdf' do
-    @check_processing_yields_text[
+    @check_processing_yields_content[
       contexts = [{:someone => 'Peter', :mood => 'Happy'}, {:someone => 'Jane', :mood => 'Sad'}],
       example = :multiple_contexts
     ]
