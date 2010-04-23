@@ -1,6 +1,7 @@
 require 'ftools'
 require 'digest/md5'
 require 'tempfile'
+require 'nokogiri'
 require 'zip/zip'
 require 'clamsy/tenjin'
 require 'rghost'
@@ -47,15 +48,24 @@ module Clamsy
 
       def render(context)
         @context_id = Digest::MD5.hexdigest(context.to_s)
-        Zip::ZipFile.open(working_odt.path) do |zip|
-          zip.select {|entry| entry.file? && entry.to_s =~ /\.xml$/ }.each do |entry|
-            zip.get_output_stream(entry.to_s) {|io| io.write(workers[entry].render(context)) }
+        Zip::ZipFile.open(working_odt.path) do |@zip|
+          @zip.select {|entry| entry.file? && entry.to_s =~ /\.xml$/ }.each do |entry|
+            @zip.get_output_stream(entry.to_s) {|io| io.write(workers[entry].render(context)) }
+            replace_pictures(entry, context[:_pictures] || {})
           end
         end
         working_odt
       end
 
       private
+
+        def replace_pictures(entry, pictures)
+          xpaths = lambda {|name| %\//drawframe[@drawname="#{name}"]/drawimage/@xlinkhref\ }
+          doc = Nokogiri::XML(entry.get_input_stream.read.gsub(':','')) # Hack to avoid namespace error
+          pictures.each do |name, path|
+            (node = doc.xpath(xpaths[name])[0]) && @zip.replace(node.value, path)
+          end
+        end
 
         def working_odt
           (@working_odts ||= {})[@context_id] ||=

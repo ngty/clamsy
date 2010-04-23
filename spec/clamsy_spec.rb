@@ -7,14 +7,23 @@ describe "Clamsy" do
   before do
     @check_processing_yields_content = lambda do |contexts, example|
       generated_pdf = tmp_file('clamsy_pdf').path
-      expected_content = comparable_content(expected_pdf(example))
       Clamsy.process(contexts, template_odt(example), generated_pdf)
-      comparable_content(generated_pdf).should.equal expected_content
+      expected_content = comparable_content(expected_pdf(example))
+      generated_content = comparable_content(generated_pdf)
+      generated_content.size.should.equal expected_content.size
+      (generated_content - expected_content).should.equal []
     end
   end
 
   after do
     trash_tmp_files
+  end
+
+  it 'should do picture replacement for matching <draw:frame draw:name="..." />' do
+    @check_processing_yields_content[
+      context = {:_pictures => {:to_be_replaced_pic => data_file('clamsy.png')}},
+      example = :picture
+    ]
   end
 
   it 'should do #{...} plain text replacement' do
