@@ -9,105 +9,180 @@ Ruby wrapper for generating a single pdf for multiple contexts from an odt templ
             |
             |-- setup isn't straight forward, need to install a couple of packages
                 (how bad it is depends on ur platform) & even manual setting up of
-                cups printer is needed
+                cups-pdf printer is needed
 
-== Templating in Action (1)
+== 1. Basics
 
-First, u need to have an odt file that serves as the template. There is nothing special
-about this odt file, u can simply create it with openoffice. In order for it to become
-a template, simply craft ur odt with placeholders & embedded ruby code.
+A template odt is just an ordinary odt (http://en.wikipedia.org/wiki/OpenDocument).
+In order for it to function as a template, we just need to decorate it (just use
+openoffice, pls don't buy ms office for that) with placeholders & embedded ruby code.
 
-Under the hood, we are using a slightly hacked version of the awesome tenjin template
-engine (http://www.kuwata-lab.com/tenjin/) to do the render. Here's a quick example of
-a template odt:
+Under the hood, clamsy is using a slightly hacked version of the awesome tenjin
+template engine (http://www.kuwata-lab.com/tenjin) to do the rendering. The following
+is all u need to know to write odt templates:
 
-  #{@company_full_name}
-  #{@company_address_line_1}
-  #{@company_address_line_2}
-
-  S/N  Item Description       Amount (SGD)
-  {? @items.each_with_index do |item, i| ?}
-  #{i} #{item.description}    #{amount}
-  {? end ?}
-                       Total  #{total}
-
-Assuming the context has already been defined (see coding section for how to do it),
-here's the generated pdf:
-
-  Monster Inc
-  Planet Mars, Street xyz,
-  Postal Code 009900
-
-  S/N  Item Description       Amount (SGD)
-
-  1    x2 Bags of Prawns      1000
-  2    x2 Bags of Lobsters    2000
-
-                       Total  3000
-
-Here's some tips for template writing:
-
-* '{? ... ?}' represents embedded Ruby statement (this differs from the vanilla tenjin)
+* '{? ... ?}' represents embedded Ruby statement (this differs from vanilla tenjin)
 * '#{ ... }' represents embedded Ruby expression
-* '${ ... }' represents embedded Ruby expression which is to be escaped (eg. '& < > "'
-  are escaped to '&amp; &lt; &gt; &quot;')
+* '${ ... }' represents embedded Ruby expression which is to be escaped
+  (eg. '& < > "' are escaped to '&amp; &lt; &gt; &quot;')
 
-== Coding in Action (2)
+== 2. Examples
 
-Given the following very simple template odt:
+=== 2.1. Text Replacement Example
 
-  -----------------------------
+Template Odt:
 
-    #{@someone} is #{mood} ...
+  --------------------------------------------
+   #{@company_full_name}
+   #{@company_address_line_1}
+   #{@company_address_line_2}
 
-  -------------------- page 1 -
+   S/N  Item Description       Amount (SGD)
+   {? @items.each_with_index do |item, i| ?}
+   #{i+1} #{item.description}  #{amount}
+   {? end ?}
+                        Total  #{total}
+  ----------------------------------- Page 1 -
 
-1. Generating single context pdf:
+Code:
+
+  class Item
+    attr_reader :description, :amount
+    def initialize(description, amount)
+      @description, @amount = description, amount
+    end
+  end
+
+  items = [
+    Item.new('Shells (x2 Bags)', 10),
+    Item.new('Clams (x2 Bags)', 20)
+  ]
+
+  context = {
+    :company_full_name => 'Monster Inc',
+    :company_address_line_1 => 'Planet Mars, Street xyz,',
+    :company_address_line_2 => 'Postal Code 009900',
+    :items => items,
+    :total => items.inject(0) {|sum, item| sum + item.amount }
+  }
 
   Clamsy.process(
-    {:someone => 'Peter', :mood => 'Happy'},
-    path_to_template_odt,
-    path_to_final_pdf
+    context,
+    path_to_template_odt, # eg. '/tmp/invoice.odt'
+    path_to_final_pdf,    # eg. '/tmp/invoice.pdf'
   )
 
-We get:
+Generated Pdf:
 
-  -----------------------------
+  --------------------------------------------
+   Monster Inc
+   Planet Mars, Street xyz,
+   Postal Code 009900
 
-    Peter is Happy ...
+   S/N  Item Description       Amount (SGD)
 
-  -------------------- page 1 -
+   1    Shells (x2 Bags)       10
+   2    Clams (x2 Bags)        20
 
-2. Generating multi-contexts pdf:
+                        Total  30
+  ----------------------------------- Page 1 -
+
+=== 2.2: Multiple Contexts Example
+
+Taking the above example one step further, if we have multiple contexts:
+
+  items << Item.new('Shrimps (x2 Bags)', 15)
+  items << Item.new('Prawns (x2 Bags)', 25)
+
+  contexts = [{
+    :company_full_name => 'Monster Inc',
+    :company_address_line_1 => 'Planet Mars, Street xyz,',
+    :company_address_line_2 => 'Postal Code 009900',
+    :items => items[0..1],
+    :total => items[0..1].inject(0) {|sum, item| sum + item.amount }
+  }, {
+    :company_full_name => 'Fisherman Inc',
+    :company_address_line_1 => 'Planet Jupiter, Street xyz,',
+    :company_address_line_2 => 'Postal Code 008800',
+    :items => items[2..3],
+    :total => items[2..3].inject(0) {|sum, item| sum + item.amount }
+  }]
 
   Clamsy.process(
-    [
-      {:someone => 'Peter', :mood => 'Happy'},
-      {:someone => 'Jane', :mood => 'Sad'}
-    ],
-    path_to_template_odt,
-    path_to_final_pdf
+    contexts,
+    path_to_template_odt, # eg. '/tmp/invoice.odt'
+    path_to_final_pdf     # eg. '/tmp/invoice.pdf'
   )
 
-We get:
+Generated Pdf:
 
-  -----------------------------
+  --------------------------------------------
+   Monster Inc
+   Planet Mars, Street xyz,
+   Postal Code 009900
 
-    Peter is Happy ...
+   S/N  Item Description       Amount (SGD)
 
-  -------------------- page 1 -
-  -----------------------------
+   1    Shells (x2 Bags)       10
+   2    Clams (x2 Bags)        20
 
-    Jane is Sad ...
+                        Total  30
+  ----------------------------------- Page 1 -
+  --------------------------------------------
+   Fisherman Inc
+   Planet Jupiter, Street xyz,
+   Postal Code 008800
 
-  -------------------- page 1 -
+   S/N  Item Description       Amount (SGD)
+
+   1    Shrimps (x2 Bags)      15
+   2    Prawns (x2 Bags)       25
+
+                        Total  40
+  ----------------------------------- Page 1 -
 
 As you can see, (whether you like it or not) the pages are merely concatenated
-together !!
+together to form a single pdf !!
 
-== Pre-requisites
+=== 2.3: Image Replacement Example
 
-1. Archlinux
+It is possible to replace images in an odt file, a useful feature if u need to insert
+digital signature into the final pdf. To acheive this, u have to:
+* insert a placeholder image into the odt file,
+* resize & move it to your heart content
+* right click on the picture, under [Picture ...]/[Options], assign a unique value
+  for [Name]
+
+Template Odt:
+
+  --------------------------------------------
+        ~~~~~~~~~~~~~~~~~~
+    Hey | nice_guy_image |
+        ~~~~~~~~~~~~~~~~~~
+
+    This is a gentle reminder that i still
+      owe you some money ...
+
+    ~~~~~~~~~~~~~~~~~~~~~~
+    | my_signature_image |
+    ~~~~~~~~~~~~~~~~~~~~~~
+  ----------------------------------- Page 1 -
+
+Assuming 'nice_guy_image' & 'my_signature_image' as names of the images, the following
+code does the appropriate replacing of images:
+
+  Clamsy.process(
+    context = {:_pictures => {
+      :nice_guy_image => path_to_avatar_image,       # eg. '/tmp/handsome.png'
+      :my_signature_image => path_to_signature_image # eg. '/tmp/signature.png'
+    }},
+    path_to_template_odt # eg. '/tmp/confession.odt'
+    path_to_final_pdf    # eg. '/tmp/confession.pdf'
+  )
+
+== 3. Pre-requisites
+
+=== 3.1. Archlinux
 
   * Installing packages:
     $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
@@ -118,18 +193,15 @@ together !!
   * Making sure cups is running:
     $ sudo /etc/rc.d/cups start
 
-2. Ubuntu (to-be-updated)
+=== 3.2. Ubuntu (to-be-updated)
 
-3. Mac (to-be-updated)
+=== 3.3. Mac (to-be-updated)
 
 == TODO
 
-* add support for replacing pictures in template odt (eg. we want the organization's
-  logo to be displayed instead of the developer's avatar!!)
-
 * add support for configuration, eg. Clamsy.configure {|config| ... }
 
-* automate cups-pdf printer setup
+* automate cups-pdf printer setup or have ooffice directly export odt to pdf
 
 * avoid making system call to 'ooffice'
 

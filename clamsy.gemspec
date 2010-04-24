@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{clamsy}
-  s.version = "0.0.2"
+  s.version = "0.0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["NgTzeYang"]
-  s.date = %q{2010-04-22}
+  s.date = %q{2010-04-23}
   s.description = %q{}
   s.email = %q{ngty77@gmail.com}
   s.extra_rdoc_files = [
@@ -28,12 +28,16 @@ Gem::Specification.new do |s|
      "lib/clamsy.rb",
      "lib/clamsy/tenjin.rb",
      "spec/clamsy_spec.rb",
+     "spec/data/clamsy.png",
+     "spec/data/clamsy2.png",
      "spec/data/embedded_ruby_example.odt",
      "spec/data/embedded_ruby_example.pdf",
      "spec/data/escaped_text_example.odt",
      "spec/data/escaped_text_example.pdf",
      "spec/data/multiple_contexts_example.odt",
      "spec/data/multiple_contexts_example.pdf",
+     "spec/data/picture_example.odt",
+     "spec/data/picture_example.pdf",
      "spec/data/plain_text_example.odt",
      "spec/data/plain_text_example.pdf",
      "spec/spec_helper.rb"
@@ -55,15 +59,18 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rubyzip>, ["= 0.9.4"])
       s.add_runtime_dependency(%q<rghost>, ["= 0.8.7.2"])
+      s.add_runtime_dependency(%q<nokogiri>, ["= 1.4.1"])
       s.add_development_dependency(%q<bacon>, [">= 1.1.0"])
     else
       s.add_dependency(%q<rubyzip>, ["= 0.9.4"])
       s.add_dependency(%q<rghost>, ["= 0.8.7.2"])
+      s.add_dependency(%q<nokogiri>, ["= 1.4.1"])
       s.add_dependency(%q<bacon>, [">= 1.1.0"])
     end
   else
     s.add_dependency(%q<rubyzip>, ["= 0.9.4"])
     s.add_dependency(%q<rghost>, ["= 0.8.7.2"])
+    s.add_dependency(%q<nokogiri>, ["= 1.4.1"])
     s.add_dependency(%q<bacon>, [">= 1.1.0"])
   end
 end
