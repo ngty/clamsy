@@ -1,6 +1,6 @@
-require File.join(File.dirname(__FILE__), 'spec_helper')
+require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 
-describe "Clamsy" do
+describe "Clamsy (using Shell printer)" do
 
   behaves_like 'has standard files support'
 
