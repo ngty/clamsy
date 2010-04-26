@@ -1,8 +1,10 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
+require File.join(File.dirname(__FILE__), 'has_stardand_integration_support_shared_spec')
 
 describe "Clamsy (using Shell printer)" do
 
   behaves_like 'has standard files support'
+  behaves_like 'has standard integration support'
 
   before do
     @check_processing_yields_content = lambda do |contexts, example|
@@ -19,7 +21,7 @@ describe "Clamsy (using Shell printer)" do
     trash_tmp_files
   end
 
-  it 'should do picture replacement for matching <draw:frame draw:name="..." />' do
+  it 'should do picture replacement for pictures with matching names' do
     @check_processing_yields_content[
       context = {:_pictures => {:to_be_replaced_pic => data_file('clamsy.png')}},
       example = :picture
@@ -40,7 +42,7 @@ describe "Clamsy (using Shell printer)" do
     ]
   end
 
-  it 'should do {? ... ?} embedded ruby statements' do
+  it 'should do {? ... ?} embedded ruby statements processing' do
     @someone = Class.new do
       attr_reader :name, :mood
       def initialize(name, mood)

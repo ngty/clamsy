@@ -6,10 +6,10 @@ require 'ftools'
 module Clamsy
   class TemplateOdt
 
-    include Clamsy::TempFiles
+    include Clamsy::FileSystemSupport
 
     def initialize(template_odt)
-      @template_odt = template_odt
+      file_must_exist!(@template_odt = template_odt)
     end
 
     def render(context)
@@ -36,7 +36,7 @@ module Clamsy
       def working_odt
         (@working_odts ||= {})[@context_id] ||=
           begin
-            dest_odt = tmp_file(@context_id)
+            dest_odt = tmp_file
             File.copy(@template_odt, dest_odt.path) ; dest_odt
           end
       end
@@ -45,10 +45,10 @@ module Clamsy
         lambda do |entry|
           (@workers ||= {})[entry.to_s] ||=
             begin
-              tmp_file = tmp_file("#{@context_id}.#{File.basename(entry.to_s)}")
-              tmp_file.write(entry.get_input_stream.read)
-              tmp_file.close
-              Tenjin::Template.new(tmp_file.path)
+              tmp_xml = tmp_file
+              tmp_xml.write(entry.get_input_stream.read)
+              tmp_xml.close
+              Tenjin::Template.new(tmp_xml.path)
             end
         end
       end
