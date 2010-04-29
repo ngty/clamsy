@@ -2,6 +2,9 @@ require 'tempfile'
 require 'digest/md5'
 
 module Clamsy
+
+  class FileNotFoundError < Exception ; end
+
   module FileSystemSupport
 
     def file_must_exist!(path, timeout=0)
