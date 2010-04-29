@@ -3,7 +3,11 @@ module Clamsy
 
     # The folder where cups-pdf generated pdfs are stored:
     # * in archlinux, this is specified in /etc/cups/cups-pdf.conf
-    PDF_OUTPUT_DIR = "/tmp/cups-pdf/#{`whoami`.strip}"
+    require 'yaml'
+    clamsy_config = YAML.load_file("#{ENV['HOME']}/.clamsy")
+    pdf_output_dir = clamsy_config ? clamsy_config['pdf_output_dir'] : "/tmp/cups-pdf/#{ENV['USER']}"
+
+    PDF_OUTPUT_DIR = pdf_output_dir
 
     # The openoffice command to print odt to pdf, requires package cups-pdf & 'Cups-PDF' printer
     # to be set up in cups.
