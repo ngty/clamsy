@@ -8,6 +8,7 @@ module Clamsy
 
   class FileNotFoundError < Exception ; end
   class ImplementationNotFoundError < Exception ; end
+  class FileCorruptedError < Exception ; end
 
   class << self
 

@@ -63,6 +63,14 @@ describe 'Template odt' do
       ]
     end
 
+    it 'should raise Clamsy::FileCorruptedError if rendering yields invalid content' do
+      lambda {
+        @template[:plain_text].render(:someone => '<Peter>', :mood => '<Happy>')
+      }.should.raise(Clamsy::FileCorruptedError).message.should.equal(
+        'Rendered file is corrupted, use ${ ... } where text escaping is needed.'
+      )
+    end
+
   end
 
 end
