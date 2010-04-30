@@ -219,7 +219,8 @@ code does the appropriate replacing of images:
 
 Written 2010 by:
 
-#1. NgTzeYang, contact ngty77[at]gmail.com or http://github.com/ngty
+#1. NgTzeYang, contact http://github.com/ngty
+#2. JasonOng, contact http://github.com/jasonong
 
 Released under the MIT license
 
