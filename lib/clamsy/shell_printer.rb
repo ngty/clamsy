@@ -4,7 +4,7 @@ module Clamsy
     # The folder where cups-pdf generated pdfs are stored:
     # * in archlinux, this is specified in /etc/cups/cups-pdf.conf
     require 'yaml'
-    clamsy_config = YAML.load_file("#{ENV['HOME']}/.clamsy")
+    clamsy_config = YAML.load_file("#{ENV['HOME']}/.clamsy") rescue nil
     pdf_output_dir = clamsy_config ? clamsy_config['pdf_output_dir'] : "/tmp/cups-pdf/#{ENV['USER']}"
 
     PDF_OUTPUT_DIR = pdf_output_dir
