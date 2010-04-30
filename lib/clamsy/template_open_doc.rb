@@ -22,31 +22,35 @@ module Clamsy
     def render(context)
       File.copy(@template_doc, (file = tmp_file).path)
       OpenDoc.new(file, @template_workers, context).transform
-      file
     end
 
     private
 
       def initialize_template_workers
         begin
-          OpenDoc.per_content_entry(@template_doc) do |entry|
-            (@template_workers ||= {})[entry.to_s] = template_worker(entry)
-          end
+          OpenDoc.per_content_entry(@template_doc) \
+            {|@entry| (@template_workers_cache ||= {})[@entry.to_s] = template_worker }
+          @template_workers = lambda {|entry| @template_workers_cache[entry.to_s] }
         rescue Zip::ZipError
           raise TemplateDocIsCorruptedError.new \
             "Template doc '#{@template_doc}' is corrupted."
         end
       end
 
-      def template_worker(entry)
+      def template_worker
+        file, content = tmp_file, @entry.get_input_stream.read
+        File.open(file.path, 'w') {|f| f.write(content) }
+        enhance_worker_with_picture_paths(Tenjin::Template.new(file.path), content)
+      end
+
+      def enhance_worker_with_picture_paths(worker, content)
         begin
-          file, content = tmp_file, entry.get_input_stream.read
-          file.write(content) ; file.close
-          OpenDoc.string_to_xml_doc(content) # check validity of xml content
-          Tenjin::Template.new(file.path)
+          class << worker ; attr_accessor :picture_paths ; end
+          worker.picture_paths = OpenDoc.extract_picture_paths(content)
+          worker
         rescue Nokogiri::XML::SyntaxError
           raise TemplateDocContentIsCorruptedError.new \
-            "Template doc content '#{@template_doc}'/'#{entry.to_s}' is corrupted."
+            "Template doc content '#{@template_doc}'/'#{@entry.to_s}' is corrupted."
         end
       end
 
@@ -56,24 +60,29 @@ module Clamsy
 
     class OpenDoc
 
-      class << self
-
-        def per_content_entry(file, &blk)
-          Zip::ZipFile.open(file) do |zip|
-            zip.select {|entry| entry.file? && entry.to_s =~ /\.xml$/ }.each do |entry|
-              class << entry ; attr_accessor :zip ; end
-              entry.zip = zip
-              yield(entry)
-            end
+      def self.per_content_entry(file, &blk)
+        Zip::ZipFile.open(file) do |zip|
+          zip.select {|entry| entry.file? && entry.to_s =~ /\.xml$/ }.each do |entry|
+            class << entry ; attr_accessor :zip ; end
+            entry.zip = zip
+            yield(entry)
           end
         end
+      end
 
-        def string_to_xml_doc(string)
-          Nokogiri::XML(string.gsub(':','')) do |config|
-            config.options = Nokogiri::XML::ParseOptions::STRICT
-          end
+      def self.string_to_xml_doc(string)
+        Nokogiri::XML(string.gsub(':','')) do |config|
+          config.options = Nokogiri::XML::ParseOptions::STRICT
         end
+      end
 
+      def self.extract_picture_paths(content)
+        string_to_xml_doc(content).
+          xpath('//drawframe').inject({}) do |memo, node|
+            name = node.attributes['drawname']
+            path = node.xpath(%\//drawimage/@xlinkhref\)[0]
+            memo.merge(path ? {:"#{name.value}" => path.value} : {})
+          end
       end
 
       def initialize(file, workers, context)
@@ -82,32 +91,30 @@ module Clamsy
 
       def transform
         OpenDoc.per_content_entry(@file.path) do |@entry|
-          @entry.zip.get_output_stream(@entry.to_s) do |io|
-            begin
-              content = @workers[@entry.to_s].render(@context)
-              io.write(content)
-              @xml_doc = OpenDoc.string_to_xml_doc(content)
-              replace_pictures
-              @xml_doc = nil
-            rescue Nokogiri::XML::SyntaxError
-              raise Clamsy::RenderedDocContentIsCorruptedError.new \
-                'Rendered doc content is corrupted, use ${ ... } where text escaping is needed.'
-            end
+          @entry.zip.get_output_stream(@entry.to_s) do |@io|
+            replace_texts ; replace_pictures
           end
         end
+        @file
       end
 
       private
 
-        def replace_pictures
-          (@context[:_pictures] || {}).each do |name, src_path|
-            (dest_path = picture_dest_path(name)) && @entry.zip.replace(dest_path, src_path)
+        def replace_texts
+          begin
+            @io.write(content = @workers[@entry].render(@context))
+            OpenDoc.string_to_xml_doc(content)
+          rescue Nokogiri::XML::SyntaxError
+            raise Clamsy::RenderedDocContentIsCorruptedError.new \
+              'Rendered doc content is corrupted, use ${ ... } where text escaping is needed.'
           end
         end
 
-        def picture_dest_path(name)
-          node = @xml_doc.xpath(%\//drawframe[@drawname="#{name}"]/drawimage/@xlinkhref\)[0]
-          node && node.value
+        def replace_pictures
+          (@context[:_pictures] || {}).each do |name, src_path|
+            (dest_path = @workers[@entry].picture_paths[:"#{name}"]) \
+              && @entry.zip.replace(dest_path, src_path)
+          end
         end
 
     end
