@@ -14,7 +14,7 @@ module Clamsy
       begin
         @template_doc = TemplateOpenDoc.new(template_doc)
         docs = [contexts].flatten.map {|ctx| @template_doc.render(ctx) }
-        ShellPrinter.odts_to_pdf(docs, final_pdf)
+        ShellPrinter.docs_to_pdf(docs, final_pdf)
       ensure
         @template_doc.trash_tmp_files
       end

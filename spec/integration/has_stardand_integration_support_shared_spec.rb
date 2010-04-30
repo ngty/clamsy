@@ -10,7 +10,7 @@ shared 'has standard integration support' do
       File.join(File.dirname(__FILE__), 'data', file)
     end
 
-    def template_odt(name)
+    def template_doc(name)
       data_file("#{name}_example.odt")
     end
 

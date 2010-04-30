@@ -9,7 +9,7 @@ describe "Clamsy (using Shell printer)" do
   before do
     @check_processing_yields_content = lambda do |contexts, example|
       generated_pdf = tmp_file('clamsy_pdf').path
-      Clamsy.process(contexts, template_odt(example), generated_pdf)
+      Clamsy.process(contexts, template_doc(example), generated_pdf)
       expected_content = comparable_content(expected_pdf(example))
       generated_content = comparable_content(generated_pdf)
       generated_content.size.should.equal expected_content.size

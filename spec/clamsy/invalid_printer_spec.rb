@@ -7,10 +7,10 @@ describe 'Invalid printer' do
   behaves_like 'has standard files support'
 
   it 'should raise Clamsy::ImplementationNotFoundError' do
-    tmp_odt = tmp_file('odt')
-    lambda { InvalidPrinter.odts_to_pdf([tmp_odt], "#{__FILE__}.pdf") }.
+    tmp_doc = tmp_file('doc')
+    lambda { InvalidPrinter.docs_to_pdf([tmp_doc], "#{__FILE__}.pdf") }.
       should.raise(Clamsy::ImplementationNotFoundError).
-      message.should.equal("InvalidPrinter.odt_to_pdf not implemented.")
+      message.should.equal("InvalidPrinter.doc_to_pdf not implemented.")
   end
 
 end

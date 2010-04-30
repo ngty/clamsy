@@ -6,10 +6,10 @@ module Clamsy
 
       include Clamsy::FileSystemSupport
 
-      def odts_to_pdf(from_odts, to_pdf)
+      def docs_to_pdf(from_docs, to_pdf)
         begin
           tmp_ps = tmp_file(File.basename(to_pdf, '.pdf'))
-          from_odts.map {|odt| tmp_ps << odt_to_ps_stream(odt.path) }
+          from_docs.map {|doc| tmp_ps << doc_to_ps_stream(doc.path) }
           tmp_ps.close
           gs_convert(:pdf, tmp_ps.path, to_pdf)
         ensure
@@ -17,15 +17,15 @@ module Clamsy
         end
       end
 
-      private
+      protected
 
-        def odt_to_ps_stream(odt_path)
-          file_must_exist!(odt_path)
-          gs_convert(:ps, odt_to_pdf(odt_path))
+        def doc_to_ps_stream(doc_path)
+          file_must_exist!(doc_path)
+          gs_convert(:ps, doc_to_pdf(doc_path))
         end
 
-        def odt_to_pdf(odt_path)
-          raise Clamsy::ImplementationNotFoundError.new("#{self.to_s}.odt_to_pdf not implemented.")
+        def doc_to_pdf(doc_path)
+          raise Clamsy::ImplementationNotFoundError.new("#{self.to_s}.doc_to_pdf not implemented.")
         end
 
         def gs_convert(format, src_path, dest_path=nil)
