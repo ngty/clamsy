@@ -1,0 +1,8 @@
+printer: cups_pdf
+config_file: ~/.clamsy.yml
+
+cups_pdf:
+  cups_output_dir: /var/spool/cups-pdf/#{USER}
+  cups_output_file:
+  ooffice_cmd: ooffice -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
+

@@ -3,6 +3,7 @@ require 'bacon'
 require 'differ'
 require 'tempfile'
 require 'digest/md5'
+require 'yaml'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
