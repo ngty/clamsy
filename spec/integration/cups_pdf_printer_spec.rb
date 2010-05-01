@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper')
 require File.join(File.dirname(__FILE__), 'has_stardand_integration_support_shared_spec')
 
-describe "Clamsy (using Shell printer)" do
+describe "Clamsy (using Cups-PDF printer)" do
 
   behaves_like 'has standard files support'
   behaves_like 'has standard integration support'

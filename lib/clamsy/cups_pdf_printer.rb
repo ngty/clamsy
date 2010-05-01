@@ -1,7 +1,7 @@
 require 'yaml'
 
 module Clamsy
-  class ShellPrinter < BasePrinter
+  class CupsPdfPrinter < BasePrinter
 
     # The folder where cups-pdf generated pdfs are stored:
     # * in archlinux, this is specified in /etc/cups/cups-pdf.conf
