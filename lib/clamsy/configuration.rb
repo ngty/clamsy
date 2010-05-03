@@ -6,9 +6,11 @@ module Clamsy
 
   module Configuration
 
+    ENV_REPLACE_PATTERN = /(\$\{(.*?)\})/
+
     def self.new(file, is_base_config=false)
       if (config = YAML.load_file(path = File.expand_path(file)) rescue nil)
-        config.update(:config_src => path)
+        config = replace_with_env_vars(config).merge(:config_src => path)
         is_base_config ? BundledFileConfig.new(config) : UserFileConfig.new(config)
       end
     end
@@ -36,17 +38,25 @@ module Clamsy
       end
 
       def get_config_var(name)
-        replace_with_env_vars(
-          case name
-          when :printer then @config_vars[name]
-          else (@config_vars[:printer_specific] ||= {})[name]
-          end
-        )
+        case name
+        when :printer then @config_vars[name]
+        else (@config_vars[:printer_specific] ||= {})[name]
+        end
       end
 
-      def replace_with_env_vars(val)
-        val && %w{HOME USER}.inject(val) do |v,k|
-          v.sub("\#{#{k}}",ENV[k])
+      def self.replace_with_env_vars(hash)
+        hash.inject({}) do |memo, args|
+          key, val = args
+          if val.is_a?(Hash)
+            memo.merge(key => replace_with_env_vars(val))
+          elsif !val.nil?
+            while val[ENV_REPLACE_PATTERN,1]
+              (m = val.match(ENV_REPLACE_PATTERN)) && val.sub!(m[1], ENV[m[2]] || '')
+            end
+            memo.merge(key => val)
+          else
+            memo
+          end
         end
       end
 
@@ -84,7 +94,7 @@ module Clamsy
           key = [:user_proc, :user_config].find do |k|
             @configs[k] && (val = @configs[k].send(name)) && !"#{val}".strip.empty?
           end
-          key ? replace_with_env_vars(@configs[key].send(name)) : super(name)
+          key ? @configs[key].send(name) : super(name)
         end
 
     end

@@ -266,5 +266,25 @@ describe "Clamsy configuration" do
 
   end
 
+  describe '> retrieving of config values' do
+
+    should 'replace any ${...} with matching environment variable value' do
+      @write_config[{'printer' => 'dummy', 'dummy' => {'output_dir' => '/home/${USER}'}}]
+      Clamsy.configure do |config|
+        config.config_file = $user_config_file
+        config.output_dir.should.equal "/home/#{ENV['USER']}"
+      end
+    end
+
+    should "replace any ${...} wo matching environment variable with blank string" do
+      @write_config[{'printer' => 'dummy', 'dummy' => {'output_dir' => '/home/${WHATEVER}'}}]
+      Clamsy.configure do |config|
+        config.config_file = $user_config_file
+        config.output_dir.should.equal "/home/"
+      end
+    end
+
+  end
+
 end
 
