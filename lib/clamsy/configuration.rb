@@ -13,20 +13,20 @@ module Clamsy
       end
     end
 
-    def initialize_config_vars(config)
-      @config_vars = {
-        :printer => (printer = config['printer']),
-        :printer_specific => (config[printer] || {}).
-          inject({}) {|memo, args| memo.merge(args[0].to_sym => args[1]) }
-      }
-    end
-
     def method_missing(method, *args)
       !"#{method}".include?('=') ? get_config_var(method) :
         set_config_var("#{method}".sub('=','').to_sym, args[0])
     end
 
     protected
+
+      def initialize_config_vars(config)
+        @config_vars = {
+          :printer => (printer = config['printer']),
+          :printer_specific => (config[printer] || {}).
+            inject({}) {|memo, args| memo.merge(args[0].to_sym => args[1]) }
+        }
+      end
 
       def set_config_var(name, value)
         case name
