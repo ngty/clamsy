@@ -1,3 +1,10 @@
+=== 0.0.4 (May 04, 2010)
+
+* fixed bug in multiple pictures replacement [#ngty]
+* support for configuring clamsy (see README section 3) [#jasonong & #ngty]
+* clamsy now has a logo (<PROJECT_ROOT>/clamsy.png) [#zhenyi]
+* well-prepared for alternative printers support [#ngty]
+
 === 0.0.3 (Apr 25, 2010)
 
 * support to replace pictures (useful for inserting digital signatures) [#ngty]

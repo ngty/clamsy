@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{clamsy}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["NgTzeYang"]
-  s.date = %q{2010-04-25}
+  s.date = %q{2010-05-04}
   s.description = %q{}
   s.email = %q{ngty77@gmail.com}
   s.extra_rdoc_files = [
@@ -25,21 +25,49 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "clamsy.gemspec",
+     "clamsy.png",
      "lib/clamsy.rb",
+     "lib/clamsy.yml",
+     "lib/clamsy/base_printer.rb",
+     "lib/clamsy/configuration.rb",
+     "lib/clamsy/cups_pdf_printer.rb",
+     "lib/clamsy/file_system_support.rb",
+     "lib/clamsy/template_open_doc.rb",
      "lib/clamsy/tenjin.rb",
-     "spec/clamsy_spec.rb",
-     "spec/data/clamsy.png",
-     "spec/data/clamsy2.png",
-     "spec/data/embedded_ruby_example.odt",
-     "spec/data/embedded_ruby_example.pdf",
-     "spec/data/escaped_text_example.odt",
-     "spec/data/escaped_text_example.pdf",
-     "spec/data/multiple_contexts_example.odt",
-     "spec/data/multiple_contexts_example.pdf",
-     "spec/data/picture_example.odt",
-     "spec/data/picture_example.pdf",
-     "spec/data/plain_text_example.odt",
-     "spec/data/plain_text_example.pdf",
+     "spec/clamsy/base_printer_spec.rb",
+     "spec/clamsy/configuration_spec.rb",
+     "spec/clamsy/cups_pdf_printer_spec.rb",
+     "spec/clamsy/data/clamsy.png",
+     "spec/clamsy/data/clamsy2.png",
+     "spec/clamsy/data/embedded_ruby_after.odt",
+     "spec/clamsy/data/embedded_ruby_before.odt",
+     "spec/clamsy/data/escaped_text_after.odt",
+     "spec/clamsy/data/escaped_text_before.odt",
+     "spec/clamsy/data/invalid_content_example.odt",
+     "spec/clamsy/data/invalid_zip_example.odt",
+     "spec/clamsy/data/multiple_contexts_after.odt",
+     "spec/clamsy/data/multiple_contexts_before.odt",
+     "spec/clamsy/data/picture_after.odt",
+     "spec/clamsy/data/picture_before.odt",
+     "spec/clamsy/data/plain_text_after.odt",
+     "spec/clamsy/data/plain_text_before.odt",
+     "spec/clamsy/file_system_support_spec.rb",
+     "spec/clamsy/invalid_printer_spec.rb",
+     "spec/clamsy/template_open_doc_spec.rb",
+     "spec/integration/cups_pdf_printer_spec.rb",
+     "spec/integration/data/embedded_ruby_example.odt",
+     "spec/integration/data/embedded_ruby_example.pdf",
+     "spec/integration/data/escaped_text_example.odt",
+     "spec/integration/data/escaped_text_example.pdf",
+     "spec/integration/data/multiple_contexts_example.odt",
+     "spec/integration/data/multiple_contexts_example.pdf",
+     "spec/integration/data/norm_clamsy.png",
+     "spec/integration/data/picture_example.odt",
+     "spec/integration/data/picture_example.pdf",
+     "spec/integration/data/plain_text_example.odt",
+     "spec/integration/data/plain_text_example.pdf",
+     "spec/integration/data/sunny_clamsy.png",
+     "spec/integration/has_stardand_integration_support_shared_spec.rb",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/ngty/clamsy}
@@ -48,7 +76,14 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{A clumsily shellish way to generate a single pdf for multiple contexts from an odt template}
   s.test_files = [
-    "spec/clamsy_spec.rb",
+    "spec/integration/cups_pdf_printer_spec.rb",
+     "spec/integration/has_stardand_integration_support_shared_spec.rb",
+     "spec/clamsy/file_system_support_spec.rb",
+     "spec/clamsy/base_printer_spec.rb",
+     "spec/clamsy/cups_pdf_printer_spec.rb",
+     "spec/clamsy/invalid_printer_spec.rb",
+     "spec/clamsy/configuration_spec.rb",
+     "spec/clamsy/template_open_doc_spec.rb",
      "spec/spec_helper.rb"
   ]
 

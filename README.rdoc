@@ -22,9 +22,9 @@ template engine (http://www.kuwata-lab.com/tenjin) to do the rendering. The foll
 is all u need to know to write odt templates:
 
 * '{? ... ?}' represents embedded Ruby statement (this differs from vanilla tenjin)
-* '#{ ... }' represents embedded Ruby expression
 * '${ ... }' represents embedded Ruby expression which is to be escaped
   (eg. '& < > "' are escaped to '&amp; &lt; &gt; &quot;')
+* '#{ ... }' represents embedded Ruby expression (u should really avoid using this)
 
 == 2. Examples
 
@@ -33,15 +33,15 @@ is all u need to know to write odt templates:
 Template Odt:
 
   --------------------------------------------
-   #{@company_full_name}
-   #{@company_address_line_1}
-   #{@company_address_line_2}
+   ${@company_full_name}
+   ${@company_address_line_1}
+   ${@company_address_line_2}
 
    S/N  Item Description       Amount (SGD)
    {? @items.each_with_index do |item, i| ?}
-   #{i+1} #{item.description}  #{amount}
+   ${i+1} ${item.description}  ${amount}
    {? end ?}
-                        Total  #{total}
+                        Total  ${total}
   ----------------------------------- Page 1 -
 
 Code:
@@ -180,9 +180,50 @@ code does the appropriate replacing of images:
     path_to_final_pdf    # eg. '/tmp/confession.pdf'
   )
 
-== 3. Pre-requisites
+== 3. Configuration
 
-=== 3.1. Archlinux
+=== 3.1. User-defined ~/.clamsy.yml
+
+  printer: cups_pdf
+  cups_pdf:
+    cups_output_dir: /var/spool/cups-pdf/${USER}
+    cups_output_file:
+    ooffice_cmd: ooffice -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
+
+NOTES:
+* ${...} gets replaced by the corresponding ENV variable, eg. ${USER} gets replaced
+  by ENV['USER']
+* printer ... describes which printer to use (currently, we ONLY have 'cups_pdf')
+* cups_output_dir ... the directory where cups-pdf places the intermediate working pdf,
+  in linux box, it is specifed by the 'Out' variable in /etc/cups/cups-pdf.conf
+* cups_output_file ... specifies the exact intermediate working pdf, when this is
+  specified, cups_output_dir is ignored
+* ooffice_cmd ... the openoffice command & arguments to use
+
+=== 3.2. Clamsy\.configure {|config| ... }
+
+  Clamsy.configure do |config|
+    config.printer = 'another_printer'
+    config.config_file = '/path/to/alternative/clamsy.yml'
+    config.cups_output_dir = '/another/output/dir'
+    config.cups_output_file = lambda { Dir.glob('/yet/another/output/dir/*.pdf').sort.last }
+  end
+
+NOTES:
+* config_file ... alternative user-defined config file, when specified, ~/.clamsy.yml will
+  be ignored (whatever is supported in this config file is exactly the same as 3.1)
+* cups_output_file ... unlike what we have in the yaml config file, this can be either a
+  proc or a string
+
+=== 3.3. Clamsy\.process(...) {|config| ... }
+
+  Clamsy.process(contexts, template_odt, final_pdf) do |config|
+    # the rest is the same as 3.2
+  end
+
+== 4. Pre-requisites
+
+=== 4.1. Archlinux
 
   * Installing packages:
     $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
@@ -193,17 +234,15 @@ code does the appropriate replacing of images:
   * Making sure cups is running:
     $ sudo /etc/rc.d/cups start
 
-=== 3.2. Ubuntu (to-be-updated)
+=== 4.2. Ubuntu (to-be-updated)
 
-=== 3.3. Mac (to-be-updated)
+=== 4.3. Mac (to-be-updated)
 
 == TODO
 
-* add support for configuration, eg. Clamsy.configure {|config| ... }
+* automate cups-pdf printer setup
 
-* automate cups-pdf printer setup or have ooffice directly export odt to pdf
-
-* avoid making system call to 'ooffice'
+* more printers support (currently, we ONLY have Clamsy::CupsPdfPrinter)
 
 == Note on Patches/Pull Requests
 
