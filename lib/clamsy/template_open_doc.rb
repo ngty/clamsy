@@ -77,12 +77,12 @@ module Clamsy
       end
 
       def self.extract_picture_paths(content)
-        string_to_xml_doc(content).
-          xpath('//drawframe').inject({}) do |memo, node|
-            name = node.attributes['drawname']
-            path = node.xpath(%\//drawimage/@xlinkhref\)[0]
-            memo.merge(path ? {:"#{name.value}" => path.value} : {})
-          end
+        doc = string_to_xml_doc(content)
+        nodes = lambda {|path| doc.xpath(path) }
+        nodes['//drawframe/@drawname'].inject({}) do |memo, node|
+          path = nodes[%\//drawframe[@drawname="#{node.value}"]//drawimage/@xlinkhref\][0]
+          memo.merge(path ? {:"#{node.value}" => path.value} : {})
+        end
       end
 
       def initialize(file, workers, context)

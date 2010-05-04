@@ -10,6 +10,7 @@ describe "Clamsy (using Cups-PDF printer)" do
     @check_processing_yields_content = lambda do |contexts, example|
       generated_pdf = tmp_file('clamsy_pdf').path
       Clamsy.process(contexts, template_doc(example), generated_pdf)
+      `cp #{generated_pdf} /tmp/abc.pdf`
       expected_content = comparable_content(expected_pdf(example))
       generated_content = comparable_content(generated_pdf)
       generated_content.size.should.equal expected_content.size
@@ -23,7 +24,10 @@ describe "Clamsy (using Cups-PDF printer)" do
 
   it 'should do picture replacement for pictures with matching names' do
     @check_processing_yields_content[
-      context = {:_pictures => {:to_be_replaced_pic => data_file('clamsy.png')}},
+      context = {:_pictures => {
+        :sunny_clamsy => data_file('norm_clamsy.png'),
+        :norm_clamsy => data_file('sunny_clamsy.png'),
+      }},
       example = :picture
     ]
   end
