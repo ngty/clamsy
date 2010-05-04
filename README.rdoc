@@ -219,8 +219,9 @@ code does the appropriate replacing of images:
 
 Written 2010 by:
 
-#1. NgTzeYang, contact http://github.com/ngty
-#2. JasonOng, contact http://github.com/jasonong
+1. NgTzeYang, contact http://github.com/ngty
+2. JasonOng, contact http://github.com/jasonong
+3. ZhenyiTan, contact http://github.com/zhenyi
 
 Released under the MIT license
 
