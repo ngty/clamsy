@@ -50,7 +50,16 @@ module Clamsy
         def gs_convert(format, src_path, dest_path=nil)
           file_must_exist!(src_path)
           method, opts = dest_path ? [:path, {:filename => dest_path}] : [:read, {}]
-          RGhost::Convert.new(src_path).to(format, opts).send(method)
+          # NOTE: Ghostscript occasionally fails, this is a quick hack for this
+          # inconsistent failure (not tested yet provided to work in real life).
+          count, max_tries = 0, 5
+          begin
+            RGhost::Convert.new(src_path).to(format, opts).send(method)
+          rescue => e
+            raise(e) if (count+=1) > max_tries
+            sleep count
+            retry
+          end
         end
 
         def inherited(subclass)
