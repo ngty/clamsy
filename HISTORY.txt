@@ -1,3 +1,8 @@
+=== Current
+
+* fixed inconsistent ghostscript failure [#ngty]
+* added examples demostrating clamsy in action [#ngty]
+
 === 0.0.4 (May 04, 2010)
 
 * fixed bug in multiple pictures replacement [#ngty]
