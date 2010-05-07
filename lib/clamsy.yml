@@ -1,8 +1,14 @@
-printer: cups_pdf
-config_file: ~/.clamsy.yml
+linux:
+  printer: cups_pdf
+  config_file: ~/.clamsy.yml
+  ooffice_bin: ooffice
+  java_bin: java
 
-cups_pdf:
-  cups_output_dir: /var/spool/cups-pdf/${USER}
-  cups_output_file:
-  ooffice_cmd: ooffice -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
+  cups_pdf:
+    cups_output_dir: /var/spool/cups-pdf/${USER}
+    cups_output_file:
+    ooffice_print_args: -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
+
+  jod_converter:
+    ooffice_server_args: -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service"
 

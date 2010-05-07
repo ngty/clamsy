@@ -5,19 +5,35 @@ require 'tempfile'
 require 'digest/md5'
 require 'yaml'
 
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+unless Object.const_defined?(:CLAMSY_LIB_DIR)
+  CLAMSY_LIB_DIR = File.join(File.expand_path(File.dirname(__FILE__)),'..','lib')
+  CLAMSY_SPEC_DIR = File.expand_path(File.dirname(__FILE__))
+  CLAMSY_BUNDLED_CONFIG = File.join(CLAMSY_LIB_DIR, 'clamsy.yml')
+end
+
+$LOAD_PATH.unshift(CLAMSY_SPEC_DIR)
+$LOAD_PATH.unshift(CLAMSY_LIB_DIR)
 require 'clamsy'
 
-shared 'has standard files support' do
-  class << self
-    def trash_tmp_files
-      (@trashable_tmp_files || []).select {|f| f.path }.map(&:unlink)
-    end
-    def tmp_file(file_name)
-      ((@trashable_tmp_files ||= []) << Tempfile.new(file_name))[-1]
-    end
-  end
+def Module.backup_methods(meths)
+  meths.each {|meth| alias_method :"_orig_#{meth}", :"#{meth}" }
+end
+
+def Module.recover_methods(meths)
+  meths.each {|meth| alias_method :"#{meth}", :"_orig_#{meth}" }
+end
+
+def Clamsy.unconfigure
+  @config = nil
+end
+
+def trash_tmp_files
+  ($trashable_tmp_files || []).select {|f| f.path }.map(&:unlink)
+  $trashable_tmp_files = nil
+end
+
+def tmp_file(file_name)
+  (($trashable_tmp_files ||= []) << Tempfile.new(file_name))[-1]
 end
 
 Bacon.summary_on_exit

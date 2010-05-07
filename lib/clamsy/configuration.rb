@@ -3,15 +3,37 @@ require 'yaml'
 module Clamsy
 
   class ConfigFileSettingNotSupportedError < Exception ; end
+  class PlatformNotSupportedError < Exception ; end
 
   module Configuration
 
     ENV_REPLACE_PATTERN = /(\$\{(.*?)\})/
 
-    def self.new(file, is_base_config=false)
+    def self.new(file, is_base_config, default_config={})
       if (config = YAML.load_file(path = File.expand_path(file)) rescue nil)
-        config = replace_with_env_vars(config).merge(:config_src => path)
-        is_base_config ? BundledFileConfig.new(config) : UserFileConfig.new(config)
+        config = replace_with_env_vars(config)
+        klass, config = is_base_config ? [BundledFileConfig, config[platform]] : [UserFileConfig, config]
+        klass.new(default_config.merge(config).merge(:config_src => path))
+      end
+    end
+
+    def self.platform
+      case ruby_platform
+        when /linux/  then 'linux'
+        else raise PlatformNotSupportedError.new("Platform '#{ruby_platform}' is not supported (yet).")
+      end
+    end
+
+    def self.ruby_platform
+      RUBY_PLATFORM
+    end
+
+    def self.merge_configs(*args)
+      args.inject({}) do |memo, hash|
+        hash.inject(memo) do |m, arg|
+          key, val = arg
+          key == :config_src ? m.merge(key => val) : m.merge("#{key}" => val)
+        end
       end
     end
 
@@ -23,8 +45,10 @@ module Clamsy
     protected
 
       def initialize_config_vars(config)
-        @config_vars = {
+        @config, @config_vars = config, {
           :printer => (printer = config['printer']),
+          :ooffice_bin => config['ooffice_bin'],
+          :java_bin => config['java_bin'],
           :printer_specific => (config[printer] || {}).
             inject({}) {|memo, args| memo.merge(args[0].to_sym => args[1]) }
         }
@@ -32,14 +56,14 @@ module Clamsy
 
       def set_config_var(name, value)
         case name
-        when :printer then @config_vars[name] = value
+        when :printer, :ooffice_bin, :java_bin then @config_vars[name] = value
         else (@config_vars[:printer_specific] ||= {})[name] = value
         end
       end
 
       def get_config_var(name)
         case name
-        when :printer then @config_vars[name]
+        when :printer, :ooffice_bin, :java_bin then @config_vars[name]
         else (@config_vars[:printer_specific] ||= {})[name]
         end
       end
@@ -74,27 +98,49 @@ module Clamsy
         initialize_config_vars(config)
         @config_file = config['config_file']
         @configs = {
-          :default => self, :user_proc => UserProcConfig.new({}),
-          :user_config => Configuration.new(@config_file)
+          :default => self,
+          :user_proc => new_proc_config,
+          :user_file => new_user_config(@config_file)
         }
       end
 
       def config_file=(file)
         file_must_exist!(@config_file = file)
-        @configs[:user_config] = Configuration.new(file)
+        @configs[:user_file] = new_user_config(file)
       end
 
       private
 
         def set_config_var(name, value)
+          if name == :printer
+            super(:printer, value)
+            reset_printer_specific_settings(value)
+          end
           @configs[:user_proc].send(:"#{name}=", value)
         end
 
         def get_config_var(name)
-          key = [:user_proc, :user_config].find do |k|
+          key = [:user_proc, :user_file].find do |k|
             @configs[k] && (val = @configs[k].send(name)) && !"#{val}".strip.empty?
           end
           key ? @configs[key].send(name) : super(name)
+        end
+
+        def reset_printer_specific_settings(printer)
+          if @config[printer]
+            initialize_config_vars(@config.merge('printer' => printer))
+            @configs[:user_file] = new_user_config(config_file)
+          else
+            raise PrinterNotFoundError.new("Printer '#{printer}' cannot be found.")
+          end
+        end
+
+        def new_user_config(file)
+          Configuration.new(file, false, 'printer' => @config_vars[:printer])
+        end
+
+        def new_proc_config
+          UserProcConfig.new({})
         end
 
     end

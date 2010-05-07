@@ -6,6 +6,8 @@ require 'clamsy/configuration'
 
 module Clamsy
 
+  ROOT = File.expand_path(File.dirname(__FILE__))
+
   class << self
 
     include FileSystemSupport
@@ -32,8 +34,11 @@ module Clamsy
       end
 
       def config
-        @config ||=
-          Configuration.new(File.join(File.dirname(__FILE__), 'clamsy.yml'), true)
+        @config ||= Configuration.new(bundled_config_file, true)
+      end
+
+      def bundled_config_file
+        File.join(Clamsy::ROOT, 'clamsy.yml')
       end
 
       def printer
