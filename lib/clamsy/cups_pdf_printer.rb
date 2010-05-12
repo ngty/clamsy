@@ -5,7 +5,7 @@ module Clamsy
       private
 
         def doc_to_pdf(doc_path)
-          system("#{config.ooffice_cmd} #{doc_path}")
+          system("#{config.ooffice_bin} #{config.ooffice_print_args} #{doc_path}")
           pdf_path = tmp_pdf_path(doc_path)
           file_must_exist!(pdf_path, 10) ; pdf_path
         end
