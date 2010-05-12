@@ -31,7 +31,7 @@ describe 'Cups pdf printer' do
 
     should "use config.cups_output_dir, basename of specified file & pdf file extension" do
       @printer.config.cups_output_dir = '/a/b/c'
-      @printer.tmp_pdf_path('/e/f/g/document').should.equal '/a/b/c/document.pdf'
+      @printer.tmp_pdf_path('/e/f/g/document.odt').should.equal '/a/b/c/document.pdf'
     end
 
   end

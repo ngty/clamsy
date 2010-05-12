@@ -21,9 +21,9 @@ module Clamsy
       @trashable_tmp_files = nil
     end
 
-    def tmp_file(file_name = nil)
-      file_name ||= Digest::MD5.hexdigest(Time.now.to_s)
-      ((@trashable_tmp_files ||= []) << Tempfile.new(file_name))[-1]
+    def tmp_file(basename = nil)
+      basename ||= Digest::MD5.hexdigest(Time.now.to_s)
+      ((@trashable_tmp_files ||= []) << Tempfile.new(basename))[-1]
     end
 
     protected
