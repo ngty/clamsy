@@ -14,6 +14,7 @@ begin
     gem.add_dependency "rghost", "= 0.8.7.2"
     gem.add_dependency "nokogiri", "= 1.4.1"
     gem.add_development_dependency "bacon", ">= 1.1.0"
+    gem.add_development_dependency "eventmachine", ">= 0.12.10"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
