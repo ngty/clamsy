@@ -20,6 +20,7 @@ module Clamsy
     def self.platform
       case ruby_platform
         when /linux/  then 'linux'
+        when /darwin/ then 'darwin'
         else raise PlatformNotSupportedError.new("Platform '#{ruby_platform}' is not supported (yet).")
       end
     end
