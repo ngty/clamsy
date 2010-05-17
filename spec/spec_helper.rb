@@ -9,6 +9,7 @@ unless Object.const_defined?(:CLAMSY_LIB_DIR)
   CLAMSY_LIB_DIR = File.join(File.expand_path(File.dirname(__FILE__)),'..','lib')
   CLAMSY_SPEC_DIR = File.expand_path(File.dirname(__FILE__))
   CLAMSY_BUNDLED_CONFIG = File.join(CLAMSY_LIB_DIR, 'clamsy.yml')
+  CLAMSY_PDFC_SCRIPT = File.join(CLAMSY_SPEC_DIR, 'pdfc', 'PDFC.sh')
 end
 
 $LOAD_PATH.unshift(CLAMSY_SPEC_DIR)

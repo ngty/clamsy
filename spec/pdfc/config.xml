@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="CHART_DENSITY_THRESHOLD">2.5</entry>
+<entry key="TOLERANCE_LINE_POSITION">3</entry>
+<entry key="TOLERANCE_LINE_STYLE">false</entry>
+<entry key="CREATE_DIFFIMAGES">false</entry>
+<entry key="CREATE_DIFFIMAGES">true</entry> 
+<entry key="NORMALIZERS">NORMALIZER_MARGIN, CHART_REMOVAL, NORMALIZER_CLIP</entry> 
+<entry key="TOLERANCE_PAGE_SIZE">2</entry>
+<entry key="TOLERANCE_IMAGE_DISTANCE">3</entry>
+<entry key="CHART_REMOVAL_MARGIN">0.3</entry>
+<entry key="CREATE_ORIGIMAGES">false</entry>
+<entry key="TOLERANCE_PAGE_RATIO">0.1</entry>
+<entry key="MODULES">MODULE_TESTMOD, MODULE_IMAGE, MODULE_PAGEPROPERTIES, MODULE_LINES, MODULE_TEXT_WORDORDER</entry>
+<entry key="TOLERANCE_LINE_SIZE">2</entry>
+<entry key="TOLERANCE_IMAGE_SIZE">0.1</entry>
+<entry key="TOLERANCE_UNDERLINE_LENGTH">0.1</entry>
+<entry key="LOG_LEVEL">INFO</entry>
+<entry key="MAX_ERRORS_PER_REPORT">10</entry>
+<entry key="TOLERANCE_PAGE_LEFTCORNER">3</entry>
+<entry key="TOLERANCE_BOX_ROUND_EDGES">3</entry>
+<entry key="TOLERANCE_LINE_THICKNESS">1</entry>
+</properties>

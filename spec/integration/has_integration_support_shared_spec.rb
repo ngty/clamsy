@@ -29,10 +29,8 @@ shared 'has integration support' do
     @check_processing_yields_content = lambda do |contexts, example|
       generated_pdf = tmp_file('clamsy_pdf').path
       Clamsy.process(contexts, template_doc(example), generated_pdf)
-      expected_content = comparable_content(expected_pdf(example))
-      generated_content = comparable_content(generated_pdf)
-      generated_content.size.should.equal expected_content.size
-      (generated_content - expected_content).should.equal []
+      (diff_result = `#{CLAMSY_PDFC_SCRIPT} #{expected_pdf(example)} #{generated_pdf}`).
+        split("\n").join('').should.match(/(| # of Differences).*(------------------).*(| 0)$/)
     end
   end
 
