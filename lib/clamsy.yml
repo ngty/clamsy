@@ -1,5 +1,5 @@
 linux:
-  printer: cups_pdf
+  printer: jod_converter
   config_file: ~/.clamsy.yml
   ooffice_bin: ooffice
   java_bin: java

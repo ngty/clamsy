@@ -23,7 +23,7 @@ describe "Clamsy configuration" do
 
   {
     :linux => {
-      :printer => 'cups_pdf', :config_file => '~/.clamsy.yml',
+      :printer => 'jod_converter', :config_file => '~/.clamsy.yml',
       :java_bin => 'java', :ooffice_bin => 'ooffice',
       :cups_pdf => {
         :ooffice_print_args => '-norestore -nofirststartwizard -nologo -headless -pt Cups-PDF',
