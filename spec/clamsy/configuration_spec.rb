@@ -23,8 +23,10 @@ describe "Clamsy configuration" do
 
   {
     :linux => {
-      :printer => 'jod_converter', :config_file => '~/.clamsy.yml',
-      :java_bin => 'java', :ooffice_bin => 'ooffice',
+      :printer => 'jod_converter',
+      :config_file => '~/.clamsy.yml',
+      :java_bin => 'java',
+      :ooffice_bin => 'ooffice',
       :cups_pdf => {
         :ooffice_print_args => '-norestore -nofirststartwizard -nologo -headless -pt Cups-PDF',
         :cups_output_dir => "/var/spool/cups-pdf/#{ENV['USER']}",
@@ -35,7 +37,23 @@ describe "Clamsy configuration" do
           '-headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service"'
       }
     },
-    :darwin => {}, :windows => {}, :java => {}
+    :darwin => {
+      :printer => 'jod_converter',
+      :config_file => '~/.clamsy.yml',
+      :java_bin => 'java',
+      :ooffice_bin => '/Applications/OpenOffice.org.app/Contents/MacOS/soffice.bin',
+      :cups_pdf => {
+        :ooffice_print_args => '-norestore -nofirststartwizard -nologo -headless -pt Cups-PDF',
+        :cups_output_dir => "/opt/local/var/spool/cups-pdf/#{ENV['USER']}",
+        :cups_output_file => nil,
+      },
+      :jod_converter => {
+        :ooffice_server_args =>
+          '-headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service" &'
+      }
+    },
+    :windows => {},
+    :java => {} # jruby
   }.each do |$platform, configs|
     describe "> default bundled config (#{$platform})" do
       before do
