@@ -1,28 +1,34 @@
+######################################################################################
+ #                                   [   Linux   ]                                  #
+######################################################################################
 linux:
   printer: jod_converter
   config_file: ~/.clamsy.yml
   ooffice_bin: ooffice
   java_bin: java
 
+  jod_converter:
+    ooffice_server_args: -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service"
+
   cups_pdf:
     cups_output_dir: /var/spool/cups-pdf/${USER}
     cups_output_file:
     ooffice_print_args: -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
 
-  jod_converter:
-    ooffice_server_args: -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service"
-
+######################################################################################
+ #                                   [    Mac    ]                                  #
+######################################################################################
 darwin:
   printer: jod_converter
   config_file: ~/.clamsy.yml
   ooffice_bin: /Applications/OpenOffice.org.app/Contents/MacOS/soffice.bin
   java_bin: java
 
+  jod_converter:
+    ooffice_server_args: -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service" &
+
   cups_pdf:
     cups_output_dir: /opt/local/var/spool/cups-pdf/${USER}
     cups_output_file:
     ooffice_print_args: -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
-
-  jod_converter:
-    ooffice_server_args: -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service" &
 
