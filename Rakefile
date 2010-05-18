@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "clamsy"
-    gem.summary = %Q{A clumsily shellish way to generate a single pdf for multiple contexts from an odt template}
-    gem.description = %Q{}
+    gem.summary = %Q{Clamsy makes PDF generation simple}
+    gem.description = %Q{Ruby wrapper for generating a single pdf for multiple contexts from an odt template.}
     gem.email = "ngty77@gmail.com"
     gem.homepage = "http://github.com/ngty/clamsy"
     gem.authors = ["NgTzeYang"]
@@ -16,6 +16,30 @@ begin
     gem.add_development_dependency "bacon", ">= 1.1.0"
     gem.add_development_dependency "eventmachine", ">= 0.12.10"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+
+    gem.post_install_message = <<-POST_INSTALL_MESSAGE
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    :: CLAMSY ::
+
+    Thank you for installing clamsy-0.0.5.
+
+    Starting from this release, the default printer has been changed from 'cups_pdf' to
+    'jod_convertor'. If java is in your PATH, and openoffice is installed the standard way,
+    most probably, no additional action is required after this gem installation.
+
+    We are in the process of constructing the clamsy wiki @ http://wiki.github.com/ngty/clamsy, pls
+    take a look there for solution(s) to your problem(s).
+
+    Alternatively, you may wish to post ur problem @ http://github.com/ngty/clamsy/issues.
+
+    Have a nice day !!
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+POST_INSTALL_MESSAGE
+
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

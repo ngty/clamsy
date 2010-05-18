@@ -1,7 +1,12 @@
-=== Current
+=== 0.0.5 (May 19, 2010)
 
 * fixed inconsistent ghostscript failure [#ngty]
 * added examples demostrating clamsy in action [#ngty]
+* fixed subtle bugs in multi-printer support in configuration & major cleaning up of configuration spec [#ngty]
+* enhanced bundled configuration support such that it is platform specific (currently only linux & mac are
+  supported though) [#ngty]
+* added new printer 'jod_converter', which is now the default printer (since it has higher chance of working
+  out of the box, as compared to the more-tedious-to-setup 'cups_pdf' printer) [#ngty]
 
 === 0.0.4 (May 04, 2010)
 
