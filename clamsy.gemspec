@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{clamsy}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["NgTzeYang"]
-  s.date = %q{2010-05-04}
-  s.description = %q{}
+  s.date = %q{2010-05-19}
+  s.description = %q{Ruby wrapper for generating a single pdf for multiple contexts from an odt template.}
   s.email = %q{ngty77@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -26,14 +26,37 @@ Gem::Specification.new do |s|
      "VERSION",
      "clamsy.gemspec",
      "clamsy.png",
+     "examples/create_many.rb",
+     "examples/create_one.rb",
+     "examples/data/context.rb",
+     "examples/data/contexts.rb",
+     "examples/data/school_logo.jpg",
+     "examples/data/staff_signature.gif",
+     "examples/data/student_offer_letter.odt",
+     "examples/tmp/dummy",
      "lib/clamsy.rb",
      "lib/clamsy.yml",
      "lib/clamsy/base_printer.rb",
      "lib/clamsy/configuration.rb",
      "lib/clamsy/cups_pdf_printer.rb",
      "lib/clamsy/file_system_support.rb",
+     "lib/clamsy/jod_converter_printer.rb",
      "lib/clamsy/template_open_doc.rb",
      "lib/clamsy/tenjin.rb",
+     "lib/jodconverter/CREDIT",
+     "lib/jodconverter/LICENSE.txt",
+     "lib/jodconverter/README.txt",
+     "lib/jodconverter/commons-cli-1.2.jar",
+     "lib/jodconverter/commons-io-1.4.jar",
+     "lib/jodconverter/jodconverter-2.2.2.jar",
+     "lib/jodconverter/jodconverter-cli-2.2.2.jar",
+     "lib/jodconverter/juh-3.0.1.jar",
+     "lib/jodconverter/jurt-3.0.1.jar",
+     "lib/jodconverter/ridl-3.0.1.jar",
+     "lib/jodconverter/slf4j-api-1.5.6.jar",
+     "lib/jodconverter/slf4j-jdk14-1.5.6.jar",
+     "lib/jodconverter/unoil-3.0.1.jar",
+     "lib/jodconverter/xstream-1.3.1.jar",
      "spec/clamsy/base_printer_spec.rb",
      "spec/clamsy/configuration_spec.rb",
      "spec/clamsy/cups_pdf_printer_spec.rb",
@@ -53,7 +76,9 @@ Gem::Specification.new do |s|
      "spec/clamsy/data/plain_text_before.odt",
      "spec/clamsy/file_system_support_spec.rb",
      "spec/clamsy/invalid_printer_spec.rb",
+     "spec/clamsy/jod_converter_printer_spec.rb",
      "spec/clamsy/template_open_doc_spec.rb",
+     "spec/fake_ooffice_server.rb",
      "spec/integration/cups_pdf_printer_spec.rb",
      "spec/integration/data/embedded_ruby_example.odt",
      "spec/integration/data/embedded_ruby_example.pdf",
@@ -67,24 +92,65 @@ Gem::Specification.new do |s|
      "spec/integration/data/plain_text_example.odt",
      "spec/integration/data/plain_text_example.pdf",
      "spec/integration/data/sunny_clamsy.png",
-     "spec/integration/has_stardand_integration_support_shared_spec.rb",
+     "spec/integration/has_integration_support_shared_spec.rb",
+     "spec/integration/jod_converter_printer_spec.rb",
+     "spec/pdfc/CCLib.jar",
+     "spec/pdfc/CREDIT",
+     "spec/pdfc/PDFC.bat",
+     "spec/pdfc/PDFC.jar",
+     "spec/pdfc/PDFC.sh",
+     "spec/pdfc/PDFParser.jar",
+     "spec/pdfc/config.xml",
+     "spec/pdfc/license/LICENSE.log4j",
+     "spec/pdfc/license/lgpl-3.0.txt",
+     "spec/pdfc/license/overview.txt",
+     "spec/pdfc/log4j-1.2.15.jar",
+     "spec/pdfc/readme.txt",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/ngty/clamsy}
+  s.post_install_message = %q{
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    :: CLAMSY ::
+
+    Thank you for installing clamsy-0.0.5.
+
+    Starting from this release, the default printer has been changed from 'cups_pdf' to
+    'jod_convertor'. If java is in your PATH, and openoffice is installed the standard way,
+    most probably, no additional action is required after this gem installation.
+
+    We are in the process of constructing the clamsy wiki @ http://wiki.github.com/ngty/clamsy, pls
+    take a look there for solution(s) to your problem(s).
+
+    Alternatively, you may wish to post ur problem @ http://github.com/ngty/clamsy/issues.
+
+    Have a nice day !!
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{A clumsily shellish way to generate a single pdf for multiple contexts from an odt template}
+  s.summary = %q{Clamsy makes PDF generation simple}
   s.test_files = [
-    "spec/integration/cups_pdf_printer_spec.rb",
-     "spec/integration/has_stardand_integration_support_shared_spec.rb",
+    "spec/fake_ooffice_server.rb",
+     "spec/integration/jod_converter_printer_spec.rb",
+     "spec/integration/cups_pdf_printer_spec.rb",
+     "spec/integration/has_integration_support_shared_spec.rb",
      "spec/clamsy/file_system_support_spec.rb",
      "spec/clamsy/base_printer_spec.rb",
+     "spec/clamsy/jod_converter_printer_spec.rb",
      "spec/clamsy/cups_pdf_printer_spec.rb",
      "spec/clamsy/invalid_printer_spec.rb",
      "spec/clamsy/configuration_spec.rb",
      "spec/clamsy/template_open_doc_spec.rb",
-     "spec/spec_helper.rb"
+     "spec/spec_helper.rb",
+     "examples/create_many.rb",
+     "examples/data/contexts.rb",
+     "examples/data/context.rb",
+     "examples/create_one.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -96,17 +162,20 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rghost>, ["= 0.8.7.2"])
       s.add_runtime_dependency(%q<nokogiri>, ["= 1.4.1"])
       s.add_development_dependency(%q<bacon>, [">= 1.1.0"])
+      s.add_development_dependency(%q<eventmachine>, [">= 0.12.10"])
     else
       s.add_dependency(%q<rubyzip>, ["= 0.9.4"])
       s.add_dependency(%q<rghost>, ["= 0.8.7.2"])
       s.add_dependency(%q<nokogiri>, ["= 1.4.1"])
       s.add_dependency(%q<bacon>, [">= 1.1.0"])
+      s.add_dependency(%q<eventmachine>, [">= 0.12.10"])
     end
   else
     s.add_dependency(%q<rubyzip>, ["= 0.9.4"])
     s.add_dependency(%q<rghost>, ["= 0.8.7.2"])
     s.add_dependency(%q<nokogiri>, ["= 1.4.1"])
     s.add_dependency(%q<bacon>, [">= 1.1.0"])
+    s.add_dependency(%q<eventmachine>, [">= 0.12.10"])
   end
 end
 
