@@ -2,15 +2,6 @@
 
 Ruby wrapper for generating a single pdf for multiple contexts from an odt template.
 
-  clamsy = clumsy + shellish
-            |        |
-            |        |-- under the hood, we are making system calls to ooffice &
-            |            cups server needs to be running
-            |
-            |-- setup isn't straight forward, need to install a couple of packages
-                (how bad it is depends on ur platform) & even manual setting up of
-                cups-pdf printer is needed
-
 == 1. Basics
 
 A template odt is just an ordinary odt (http://en.wikipedia.org/wiki/OpenDocument).
@@ -182,67 +173,17 @@ code does the appropriate replacing of images:
 
 == 3. Configuration
 
-=== 3.1. User-defined ~/.clamsy.yml
-
-  printer: cups_pdf
-  cups_pdf:
-    cups_output_dir: /var/spool/cups-pdf/${USER}
-    cups_output_file:
-    ooffice_cmd: ooffice -norestore -nofirststartwizard -nologo -headless -pt Cups-PDF
-
-NOTES:
-* ${...} gets replaced by the corresponding ENV variable, eg. ${USER} gets replaced
-  by ENV['USER']
-* printer ... describes which printer to use (currently, we ONLY have 'cups_pdf')
-* cups_output_dir ... the directory where cups-pdf places the intermediate working pdf,
-  in linux box, it is specifed by the 'Out' variable in /etc/cups/cups-pdf.conf
-* cups_output_file ... specifies the exact intermediate working pdf, when this is
-  specified, cups_output_dir is ignored
-* ooffice_cmd ... the openoffice command & arguments to use
-
-=== 3.2. Clamsy\.configure {|config| ... }
-
-  Clamsy.configure do |config|
-    config.printer = 'another_printer'
-    config.config_file = '/path/to/alternative/clamsy.yml'
-    config.cups_output_dir = '/another/output/dir'
-    config.cups_output_file = lambda { Dir.glob('/yet/another/output/dir/*.pdf').sort.last }
-  end
-
-NOTES:
-* config_file ... alternative user-defined config file, when specified, ~/.clamsy.yml will
-  be ignored (whatever is supported in this config file is exactly the same as 3.1)
-* cups_output_file ... unlike what we have in the yaml config file, this can be either a
-  proc or a string
-
-=== 3.3. Clamsy\.process(...) {|config| ... }
-
-  Clamsy.process(contexts, template_odt, final_pdf) do |config|
-    # the rest is the same as 3.2
-  end
+(see http://wiki.github.com/ngty/clamsy/configuration)
 
 == 4. Pre-requisites
 
-=== 4.1. Archlinux
-
-  * Installing packages:
-    $ sudo pacman -S ghostscript cups cups-pdf go-openoffice
-
-  * Setting up the cups-pdf virtual printer by following instructions @
-    http://wiki.archlinux.org/index.php/CUPS#Configuring_CUPS-PDF_virtual_printer
-
-  * Making sure cups is running:
-    $ sudo /etc/rc.d/cups start
-
-=== 4.2. Ubuntu (to-be-updated)
-
-=== 4.3. Mac (to-be-updated)
+* Make sure openoffice, java & ghostscript are installed
 
 == TODO
 
 * automate cups-pdf printer setup
-
-* more printers support (currently, we ONLY have Clamsy::CupsPdfPrinter)
+* address security risk of user running destructive commands within embedded ruby in odt
+  template
 
 == Note on Patches/Pull Requests
 
