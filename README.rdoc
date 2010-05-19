@@ -181,9 +181,12 @@ code does the appropriate replacing of images:
 
 == TODO
 
-* automate cups-pdf printer setup
 * address security risk of user running destructive commands within embedded ruby in odt
   template
+* support for other platforms (eg. windows & jruby)
+* turn off non-santized ruby expression by default (since the generated doc easily breaks
+  when underlying xml is invalid)
+* automate cups-pdf printer setup
 
 == Note on Patches/Pull Requests
 
