@@ -22,11 +22,18 @@ describe 'Template open doc' do
         message.should.equal("Template doc '#{invalid_template}' is corrupted.")
     end
 
-    it 'should raise Clamsy::TemplateDocContentIsCorruptedError if template doc has invalid content' do
-      invalid_template = @data_file['invalid_content_example.odt']
+    it 'should raise Clamsy::TemplateDocContentIsCorruptedError if template doc has invalid xml content' do
+      invalid_template = @data_file['invalid_xml_content_example.odt']
       lambda { Clamsy::TemplateOpenDoc.new(invalid_template) }.
         should.raise(Clamsy::TemplateDocContentIsCorruptedError).
         message.should.equal("Template doc content '#{invalid_template}'/'content.xml' is corrupted.")
+    end
+
+    it 'should raise Clamsy::TemplateDocContentIsCorruptedError if has ruby syntax error' do
+      invalid_template = @data_file['invalid_content_example.odt']
+      lambda { Clamsy::TemplateOpenDoc.new(invalid_template) }.
+        should.raise(Clamsy::TemplateDocContentIsCorruptedError).
+        message.should.equal("Template doc '#{invalid_template}' cannot be compiled due to (ruby) syntax error.")
     end
 
   end

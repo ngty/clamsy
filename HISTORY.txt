@@ -1,3 +1,7 @@
+=== current
+
+* catch ruby syntax error in template document [#ngty]
+
 === 0.0.5 (May 19, 2010)
 
 * fixed inconsistent ghostscript failure [#ngty]

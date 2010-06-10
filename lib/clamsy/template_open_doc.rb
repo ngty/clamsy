@@ -46,8 +46,22 @@ module Clamsy
       def template_worker
         file, content = tmp_file, @entry.get_input_stream.read
         File.open(file.path, 'w') {|f| f.write(content) }
-        enhance_worker_with_picture_paths(Tenjin::Template.new(file.path), content)
+        worker = Tenjin::Template.new(file.path)
+        check_worker_has_valid_syntax(worker = Tenjin::Template.new(file.path))
+        enhance_worker_with_picture_paths(worker, content)
       end
+
+      def check_worker_has_valid_syntax(worker)
+        begin
+          worker.render
+        rescue SyntaxError
+          raise TemplateDocContentIsCorruptedError.new \
+            "Template doc '#{@template_doc}' cannot be compiled due to (ruby) syntax error."
+        rescue
+          # Well, other errors are expected since context is not yet defined.
+        end
+      end
+
 
       def enhance_worker_with_picture_paths(worker, content)
         begin
