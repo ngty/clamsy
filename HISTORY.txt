@@ -1,6 +1,6 @@
 === current
 
-* catch ruby syntax error in template document [#ngty]
+* catch ruby syntax error in template document by throwing Clamsy::TemplateDocContentIsCorruptedError [#ngty]
 
 === 0.0.5 (May 19, 2010)
 
