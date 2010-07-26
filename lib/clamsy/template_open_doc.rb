@@ -12,10 +12,8 @@ module Clamsy
 
   class TemplateOpenDoc
 
-    include Clamsy::FileSystemSupport
-
     def initialize(template_doc)
-      file_must_exist!(@template_doc = template_doc)
+      FileSystem.file_must_exist!(@template_doc = template_doc)
       initialize_template_workers
     end
 
@@ -44,7 +42,7 @@ module Clamsy
       end
 
       def template_worker
-        file, content = tmp_file, @entry.get_input_stream.read
+        file, content = FileSystem.tmp_file, @entry.get_input_stream.read
         File.open(file.path, 'w') {|f| f.write(content) }
         worker = Tenjin::Template.new(file.path)
         check_worker_has_valid_syntax(worker = Tenjin::Template.new(file.path))

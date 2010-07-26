@@ -13,13 +13,13 @@ module Clamsy
           run_ooffice_server
           pdf_path = tmp_pdf_path(doc_path)
           system("#{print_cmd} #{doc_path} #{pdf_path}")
-          file_must_exist!(pdf_path, 10) ; pdf_path
+          FileSystem.file_must_exist!(pdf_path, 10) ; pdf_path
         end
 
         private
 
           def tmp_pdf_path(doc_path)
-            tmp_file([Digest::MD5.hexdigest(doc_path),'.pdf']).path
+            FileSystem.tmp_file([Digest::MD5.hexdigest(doc_path),'.pdf']).path
           end
 
           def print_cmd

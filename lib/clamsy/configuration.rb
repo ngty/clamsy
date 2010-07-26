@@ -92,7 +92,6 @@ module Clamsy
     class BundledFileConfig
 
       include Configuration
-      include FileSystemSupport
       attr_reader :config_file
 
       def initialize(config)
@@ -106,7 +105,7 @@ module Clamsy
       end
 
       def config_file=(file)
-        file_must_exist!(@config_file = file)
+        FileSystem.file_must_exist!(@config_file = file)
         @configs[:user_file] = new_user_config(file)
       end
 

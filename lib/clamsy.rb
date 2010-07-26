@@ -1,5 +1,6 @@
+require 'gjman/pdf'
 require 'clamsy/tenjin'
-require 'clamsy/file_system_support'
+require 'clamsy/file_system'
 require 'clamsy/printers'
 require 'clamsy/template_open_doc'
 require 'clamsy/configuration'
@@ -9,8 +10,6 @@ module Clamsy
   ROOT = File.expand_path(File.dirname(__FILE__))
 
   class << self
-
-    include FileSystemSupport
 
     def configure(&blk)
       yield(config)
@@ -33,7 +32,7 @@ module Clamsy
           docs = [contexts].flatten.map {|ctx| @template_doc.render(ctx) }
           printer.docs_to_pdf(docs, final_pdf)
         ensure
-          @template_doc.trash_tmp_files
+          FileSystem.trash_tmp_files
         end
       end
 
