@@ -1,7 +1,7 @@
-require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'clamsy', 'cups_pdf_printer')
+require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper')
+require File.join(Clamsy::ROOT, 'clamsy', 'printers', 'cups_pdf')
 
-class << Clamsy::CupsPdfPrinter
+class << Clamsy::Printers::CupsPdf
   public :tmp_pdf_path
   attr_accessor :config
 end
@@ -9,7 +9,7 @@ end
 describe 'Cups pdf printer' do
 
   before do
-    @printer = Clamsy::CupsPdfPrinter
+    @printer = Clamsy::Printers::CupsPdf
     @printer.config = Class.new { attr_accessor :cups_output_dir, :cups_output_file }.new
   end
 

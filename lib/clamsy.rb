@@ -1,6 +1,6 @@
 require 'clamsy/tenjin'
 require 'clamsy/file_system_support'
-require 'clamsy/base_printer'
+require 'clamsy/printers'
 require 'clamsy/template_open_doc'
 require 'clamsy/configuration'
 
@@ -14,6 +14,10 @@ module Clamsy
 
     def configure(&blk)
       yield(config)
+    end
+
+    def root
+      @root ||= File.join(File.expand_path(File.dirname(__FILE__)))
     end
 
     def process(contexts, template_doc, final_pdf, &blk)
@@ -42,7 +46,7 @@ module Clamsy
       end
 
       def printer
-        Clamsy::BasePrinter.get(config.printer, config)
+        Clamsy::Printers.get(config.printer, config)
       end
 
   end

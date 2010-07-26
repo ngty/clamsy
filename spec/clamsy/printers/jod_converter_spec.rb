@@ -1,7 +1,7 @@
-require File.join(File.dirname(__FILE__), '..', 'spec_helper')
-require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'clamsy', 'jod_converter_printer')
+require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper')
+require File.join(Clamsy::ROOT, 'clamsy', 'printers', 'jod_converter')
 
-class << Clamsy::JODConverterPrinter
+class << Clamsy::Printers::JODConverter
   public :ooffice_server_must_be_running!, :ooffice_server_port, :run_ooffice_server
   attr_accessor :config
 end
@@ -9,7 +9,7 @@ end
 describe 'JODConverter printer' do
 
   before do
-    @printer = Clamsy::JODConverterPrinter
+    @printer = Clamsy::Printers::JODConverter
     @printer.config = Class.new { attr_accessor :ooffice_server_args, :ooffice_bin }.new
     @ooffice_server_port = '89999' # see <PROJECT_ROOT>/spec/fake_ooffice_server.rb
   end

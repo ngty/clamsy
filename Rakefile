@@ -11,7 +11,7 @@ begin
     gem.homepage = "http://github.com/ngty/clamsy"
     gem.authors = ["NgTzeYang"]
     gem.add_dependency "rubyzip", "= 0.9.4"
-    gem.add_dependency "rghost", "= 0.8.7.2"
+    gem.add_dependency "gjman", "= 0.1.0"
     gem.add_dependency "nokogiri", "= 1.4.1"
     gem.add_development_dependency "bacon", ">= 1.1.0"
     gem.add_development_dependency "eventmachine", ">= 0.12.10"
