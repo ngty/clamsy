@@ -15,8 +15,8 @@ module Clamsy
       yield(config)
     end
 
-    def root
-      @root ||= File.join(File.expand_path(File.dirname(__FILE__)))
+    def root(*args)
+      args.size == 0 ? ROOT : File.join(ROOT, *args)
     end
 
     def process(contexts, template_doc, final_pdf, &blk)
@@ -41,7 +41,7 @@ module Clamsy
       end
 
       def bundled_config_file
-        File.join(Clamsy::ROOT, 'clamsy.yml')
+        Clamsy.root('clamsy.yml')
       end
 
       def printer

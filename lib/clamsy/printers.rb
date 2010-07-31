@@ -9,7 +9,7 @@ module Clamsy
 
       def get(name, config)
         begin
-          require File.join(Clamsy::ROOT, 'clamsy', 'printers', name.to_s)
+          require Clamsy.root('clamsy', 'printers', name.to_s)
           (printer = self[name]).configure(config)
         rescue Exception
           raise PrinterNotFoundError.new("Printer '#{name}' cannot be found.")
