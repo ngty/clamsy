@@ -25,7 +25,7 @@ module Clamsy
           def print_cmd
             [
               "#{config.java_bin} -jar",
-              File.join(Clamsy::ROOT, 'java', 'jodconverter', 'jodconverter-cli-2.2.2.jar'),
+              File.join(Clamsy::ROOT, 'ext', 'jodconverter', 'jodconverter-cli-2.2.2.jar'),
               "--port #{ooffice_server_port}",
               '>/dev/null 2>&1'
             ].join(' ')
