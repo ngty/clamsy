@@ -1,6 +1,8 @@
 === current
 
 * catch ruby syntax error in template document by throwing Clamsy::TemplateDocContentIsCorruptedError [#ngty]
+* delegated concatenation of pdfs to external lib gjman [#ngty]
+* code cleanup for printers support [#ngty]
 
 === 0.0.5 (May 19, 2010)
 
