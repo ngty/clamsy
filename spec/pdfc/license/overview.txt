@@ -1,9 +1,0 @@
-Here is an overview of the licenses in the various jar files provided with PDFC.
-
-
-JAR file                              License Info
----------------------------------------------------------------------------------------------
-log4j-1.2.15.jar                      See license/LICENSE.log4j
-PDFCParser.jar                        LGPL license - see lgpl-3.0.txt
-PDFC.jar                              Copyright 2009-2010, i-net software. All rights reserved.
-CCLib.jar                             Copyright 2009-2010, i-net software. All rights reserved.

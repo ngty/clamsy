@@ -1,1 +1,0 @@
-java -cp CCLib.jar;.;log4j-1.2.15.jar;PDFC.jar;PDFParser.jar com.inet.pdfc.PDFC %1 %2 %3 %4 %5 %6 %7

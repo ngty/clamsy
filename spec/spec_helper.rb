@@ -9,7 +9,6 @@ unless Object.const_defined?(:CLAMSY_LIB_DIR)
   CLAMSY_LIB_DIR = File.join(File.expand_path(File.dirname(__FILE__)),'..','lib')
   CLAMSY_SPEC_DIR = File.expand_path(File.dirname(__FILE__))
   CLAMSY_BUNDLED_CONFIG = File.join(CLAMSY_LIB_DIR, 'clamsy.yml')
-  CLAMSY_PDFC_SCRIPT = File.join(CLAMSY_SPEC_DIR, 'pdfc', 'PDFC.sh')
 end
 
 $LOAD_PATH.unshift(CLAMSY_SPEC_DIR)
@@ -33,8 +32,8 @@ def trash_tmp_files
   $trashable_tmp_files = nil
 end
 
-def tmp_file(file_name)
-  (($trashable_tmp_files ||= []) << Tempfile.new(file_name))[-1]
+def tmp_file(args)
+  (($trashable_tmp_files ||= []) << Tempfile.new(args))[-1]
 end
 
 Bacon.summary_on_exit
