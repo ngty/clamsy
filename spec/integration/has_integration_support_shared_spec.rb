@@ -9,14 +9,19 @@ shared 'has integration support' do
 
   class << self
 
-    def data_file(file)
-      File.join(File.dirname(__FILE__), 'data', file)
+    def pic_file(file)
+      data_file(:generic, file)
+    end
+
+    def data_file(*args)
+      File.join([File.dirname(__FILE__), 'data', args.map(&:to_s)].flatten)
     end
 
     def should_generate_expected_pdf(contexts, name)
-      expected_pdf =  data_file("#{name}_example.pdf")
-      template_doc = data_file("#{name}_example.odt")
+      expected_pdf =  data_file(@printer, "#{name}_example.pdf")
+      template_doc = data_file(:generic, "#{name}_example.odt")
       generated_pdf = Clamsy.process(contexts, template_doc, tmp_file(%w{clamsy .pdf}).path)
+      `cp #{generated_pdf} /tmp/generated.pdf`
       Gjman::PDF.match?(expected_pdf, generated_pdf).should.be.true
     end
 
@@ -29,8 +34,8 @@ shared 'has integration support' do
   it 'should do picture replacement for pictures with matching names' do
     should_generate_expected_pdf \
       context = {:_pictures => {
-        :sunny_clamsy => data_file('norm_clamsy.png'),
-        :norm_clamsy => data_file('sunny_clamsy.png'),
+        :sunny_clamsy => pic_file('norm_clamsy.png'),
+        :norm_clamsy => pic_file('sunny_clamsy.png'),
       }},
       example = :picture
   end
