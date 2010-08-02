@@ -6,10 +6,8 @@ module Clamsy
         attr_reader :config
 
         def docs_to_pdf(from_docs, to_pdf)
-          Gjman::PDF.merge(
-            from_docs.map{|doc| doc_to_pdf(doc.path) },
-            :to => to_pdf
-          )
+          tmp_pdfs = from_docs.map{|doc| doc_to_pdf(doc.path) }
+          Gjman::PDF.merge(tmp_pdfs, :to => to_pdf)
         end
 
         def configure(config)
