@@ -17,11 +17,11 @@ shared 'has integration support' do
       File.join([File.dirname(__FILE__), 'data', args.map(&:to_s)].flatten)
     end
 
-    def should_generate_expected_pdf(contexts, name)
-      expected_pdf =  data_file(@printer, "#{name}_example.pdf")
-      template_doc = data_file(:generic, "#{name}_example.odt")
+    def should_generate_expected_pdf(contexts, name, template_doc = nil)
+      template_doc ||= data_file(:generic, "#{name}_example.odt")
+      expected_pdf = data_file(@printer, "#{name}_example.pdf")
       generated_pdf = Clamsy.process(contexts, template_doc, tmp_file(%w{clamsy .pdf}).path)
-      `cp #{generated_pdf} /tmp/generated.pdf`
+      # `cp #{generated_pdf} /tmp/generated.pdf` # DEBUG
       Gjman::PDF.match?(expected_pdf, generated_pdf).should.be.true
     end
 
@@ -62,6 +62,18 @@ shared 'has integration support' do
     should_generate_expected_pdf \
       contexts = [{:someone => 'Peter', :mood => 'Happy'}, {:someone => 'Jane', :mood => 'Sad'}],
       example = :multiple_contexts
+  end
+
+  {
+    :english => 'Its a Wonderful World !!',
+    :chinese => '世界真美好！！'
+  }.each do |lang, text|
+    it "should do #{lang} text replacement" do
+      should_generate_expected_pdf \
+        contexts = {:text => text},
+        example = :"#{lang}",
+        template_doc = data_file(:generic, 'lang_example.odt')
+    end
   end
 
 end
