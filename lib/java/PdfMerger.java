@@ -19,19 +19,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 // http://viralpatel.net/blogs/2009/06/itext-tutorial-merge-split-pdf-files-using-itext-jar.html
 public class PdfMerger {
 
-  /*
   public static void main(String[] args) {
-    try {
-      List<InputStream> pdfs = new ArrayList<InputStream>();
-      pdfs.add(new FileInputStream("c:\\1.pdf"));
-      pdfs.add(new FileInputStream("c:\\2.pdf"));
-      OutputStream output = new FileOutputStream("c:\\merge.pdf");
-      MergePDF.concatPDFs(pdfs, output, true);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    concat(args[0], args[1]);
   }
-  */
 
   public static void concat(String srcFilesStr, String outFile) {
     FileOutputStream outStream = getOutStream(outFile);

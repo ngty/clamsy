@@ -1,7 +1,7 @@
 module Clamsy
   class PDF
 
-    JAVA_CLASS_PATH = %w{iText-5.0.3 utils}.map do |name|
+    JARS_PATH = %w{iText-5.0.3 utils}.map do |name|
       File.expand_path("../../java/#{name}.jar", __FILE__)
     end.join(':')
 
@@ -10,10 +10,10 @@ module Clamsy
       else
         begin
           require 'rjb'
-          Rjb::load(JAVA_CLASS_PATH)
+          Rjb::load(JARS_PATH)
           Rjb::import('PdfMerger').concat(srcs.join(','), dest)
         rescue LoadError
-
+          system("java -cp #{JARS_PATH} PdfMerger #{srcs.join(',')} #{dest}")
         end
       end
       dest
