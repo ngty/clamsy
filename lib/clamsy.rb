@@ -1,5 +1,6 @@
 require 'gjman/pdf'
 require 'clamsy/tenjin'
+require 'clamsy/pdf'
 require 'clamsy/file_system'
 require 'clamsy/printers'
 require 'clamsy/template_open_doc'
