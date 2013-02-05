@@ -158,22 +158,22 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<rubyzip>, ["= 0.9.4"])
+      s.add_runtime_dependency(%q<rubyzip>, [">= 0.9.4"])
       s.add_runtime_dependency(%q<rghost>, ["= 0.8.7.2"])
-      s.add_runtime_dependency(%q<nokogiri>, ["= 1.4.1"])
+      s.add_runtime_dependency(%q<nokogiri>, [">= 1.4.1"])
       s.add_development_dependency(%q<bacon>, [">= 1.1.0"])
       s.add_development_dependency(%q<eventmachine>, [">= 0.12.10"])
     else
-      s.add_dependency(%q<rubyzip>, ["= 0.9.4"])
+      s.add_dependency(%q<rubyzip>, [">= 0.9.4"])
       s.add_dependency(%q<rghost>, ["= 0.8.7.2"])
-      s.add_dependency(%q<nokogiri>, ["= 1.4.1"])
+      s.add_dependency(%q<nokogiri>, [">= 1.4.1"])
       s.add_dependency(%q<bacon>, [">= 1.1.0"])
       s.add_dependency(%q<eventmachine>, [">= 0.12.10"])
     end
   else
-    s.add_dependency(%q<rubyzip>, ["= 0.9.4"])
+    s.add_dependency(%q<rubyzip>, [">= 0.9.4"])
     s.add_dependency(%q<rghost>, ["= 0.8.7.2"])
-    s.add_dependency(%q<nokogiri>, ["= 1.4.1"])
+    s.add_dependency(%q<nokogiri>, [">= 1.4.1"])
     s.add_dependency(%q<bacon>, [">= 1.1.0"])
     s.add_dependency(%q<eventmachine>, [">= 0.12.10"])
   end
