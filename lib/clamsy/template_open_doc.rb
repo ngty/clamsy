@@ -33,7 +33,7 @@ module Clamsy
       def initialize_template_workers
         begin
           OpenDoc.per_content_entry(@template_doc) \
-            {|@entry| (@template_workers_cache ||= {})[@entry.to_s] = template_worker }
+            {|entry| @entry = entry; (@template_workers_cache ||= {})[@entry.to_s] = template_worker }
           @template_workers = lambda {|entry| @template_workers_cache[entry.to_s] }
         rescue Zip::ZipError
           raise TemplateDocIsCorruptedError.new \
