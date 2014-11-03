@@ -1,7 +1,6 @@
 require 'digest/md5'
 require 'nokogiri'
 require 'zip/zip'
-require 'ftools'
 
 module Clamsy
 
@@ -18,7 +17,7 @@ module Clamsy
     end
 
     def render(context)
-      File.copy(@template_doc, (file = tmp_doc(context)).path)
+      FileUtils.copy(@template_doc, (file = tmp_doc(context)).path)
       OpenDoc.new(file, @template_workers, context).transform
     end
 
@@ -27,7 +26,7 @@ module Clamsy
       def tmp_doc(context)
         @template_doc_suffix ||= ".#{@template_doc.to_s.split('.').last}"
         uid = Digest::MD5.hexdigest(Time.now.to_s + context.to_s)
-        tmp_file([uid, @template_doc_suffix])
+        Tempfile.new([uid, @template_doc_suffix])
       end
 
       def initialize_template_workers
@@ -42,11 +41,13 @@ module Clamsy
       end
 
       def template_worker
-        file, content = FileSystem.tmp_file, @entry.get_input_stream.read
+        file, content = FileSystem.tmp_file, @entry.get_input_stream.read.force_encoding('utf-8')
+        Rails.logger.info content
         File.open(file.path, 'w') {|f| f.write(content) }
         worker = Tenjin::Template.new(file.path)
         check_worker_has_valid_syntax(worker = Tenjin::Template.new(file.path))
-        enhance_worker_with_picture_paths(worker, content)
+        return worker
+        #enhance_worker_with_picture_paths(worker, content)
       end
 
       def check_worker_has_valid_syntax(worker)
@@ -89,9 +90,7 @@ module Clamsy
       end
 
       def self.string_to_xml_doc(string)
-        Nokogiri::XML(string.gsub(':','')) do |config|
-          config.options = Nokogiri::XML::ParseOptions::STRICT
-        end
+        Nokogiri::XML(string.gsub(':',''))
       end
 
       def self.extract_picture_paths(content)
@@ -110,9 +109,9 @@ module Clamsy
       def transform
         OpenDoc.per_content_entry(@file.path) do |entry|
           @entry = entry
-          @entry.zip.get_output_stream(@entry.to_s) do |io|
+          @entry.zip.get_output_stream(@entry.to_s.force_encoding('utf-8')) do |io|
             @io = io
-            replace_texts ; replace_pictures
+            replace_texts #; replace_pictures
           end
         end
         @file
