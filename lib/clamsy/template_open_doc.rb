@@ -108,8 +108,10 @@ module Clamsy
       end
 
       def transform
-        OpenDoc.per_content_entry(@file.path) do |@entry|
-          @entry.zip.get_output_stream(@entry.to_s) do |@io|
+        OpenDoc.per_content_entry(@file.path) do |entry|
+          @entry = entry
+          @entry.zip.get_output_stream(@entry.to_s) do |io|
+            @io = io
             replace_texts ; replace_pictures
           end
         end
