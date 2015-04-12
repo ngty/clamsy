@@ -89,6 +89,7 @@ module Clamsy
       end
 
       def self.string_to_xml_doc(string)
+        return Nokogiri::XML('') if string.empty?
         Nokogiri::XML(string.gsub(':','')) do |config|
           config.options = Nokogiri::XML::ParseOptions::STRICT
         end
