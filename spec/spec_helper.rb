@@ -35,4 +35,8 @@ def tmp_file(args)
   (($trashable_tmp_files ||= []) << Tempfile.new(args))[-1]
 end
 
+def having_same_content_as(expected)
+  lambda {|file| Gjman::PDF.match?(file, expected) }
+end
+
 Bacon.summary_on_exit
