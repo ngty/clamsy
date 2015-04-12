@@ -57,8 +57,9 @@ describe "Clamsy configuration" do
   }.each do |platform, configs|
     describe "> default bundled config (#{platform})" do
       before do
+        $platform = platform
         class << Clamsy::Configuration
-          def ruby_platform ; "#{platform}" ; end
+          def ruby_platform ; "#{$platform}" ; end
           def new(file, is_base_config, default_configs={})
             file == '~/.clamsy.yml' ? nil : _orig_new(CLAMSY_BUNDLED_CONFIG, true)
           end
