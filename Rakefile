@@ -66,7 +66,7 @@ rescue LoadError
   end
 end
 
-task :spec => :check_dependencies
+task :spec
 
 begin
   require 'reek/adapters/rake_task'
