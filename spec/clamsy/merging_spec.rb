@@ -27,13 +27,13 @@ describe 'Merging pdfs' do
     trash_tmp_files
   end
 
-  should_correctly_merge :a4_portrait, [1]
-  should_correctly_merge :a4_portrait, [1,2,3]
-  should_correctly_merge :a4_landscape, [1]
-  should_correctly_merge :a4_landscape, [1,2,3]
-  should_correctly_merge :letter_portrait, [1]
-  should_correctly_merge :letter_portrait, [1,2,3]
-  should_correctly_merge :letter_landscape, [1]
-  should_correctly_merge :letter_landscape, [1,2,3]
+  should_correctly_merge 'a4_portrait', [1]
+  should_correctly_merge 'a4_portrait', [1,2,3]
+  should_correctly_merge 'a4_landscape', [1]
+  should_correctly_merge 'a4_landscape', [1,2,3]
+  should_correctly_merge 'letter_portrait', [1]
+  should_correctly_merge 'letter_portrait', [1,2,3]
+  should_correctly_merge 'letter_landscape', [1]
+  should_correctly_merge 'letter_landscape', [1,2,3]
 
 end
