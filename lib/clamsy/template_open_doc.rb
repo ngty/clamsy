@@ -18,7 +18,7 @@ module Clamsy
     end
 
     def render(context)
-      File.copy(@template_doc, (file = tmp_doc(context)).path)
+      FileUtils.copy(@template_doc, (file = tmp_doc(context)).path)
       OpenDoc.new(file, @template_workers, context).transform
     end
 
@@ -27,7 +27,7 @@ module Clamsy
       def tmp_doc(context)
         @template_doc_suffix ||= ".#{@template_doc.to_s.split('.').last}"
         uid = Digest::MD5.hexdigest(Time.now.to_s + context.to_s)
-        tmp_file([uid, @template_doc_suffix])
+        FileSystem.tmp_file([uid, @template_doc_suffix])
       end
 
       def initialize_template_workers

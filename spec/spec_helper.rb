@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bacon'
+require 'differ'
 require 'tempfile'
 require 'digest/md5'
 require 'yaml'
