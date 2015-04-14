@@ -43,7 +43,7 @@ module Clamsy
 
       def template_worker(entry)
         file, content = FileSystem.tmp_file, entry.get_input_stream.read
-        File.open(file.path, 'w') {|f| f.write(content) }
+        File.open(file.path, "w:#{Encoding.default_external}") {|f| f.write(content.force_encoding(Encoding.default_external)) }
         worker = Tenjin::Template.new(file.path)
         check_worker_has_valid_syntax(worker = Tenjin::Template.new(file.path))
         enhance_worker_with_picture_paths(worker, content, entry)
