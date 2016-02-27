@@ -1,5 +1,7 @@
 = clamsy
 
+== IMPORTANT: Clamsy is no longer maintained, use it at your own risk, & expect no bug fixes.
+
 Ruby wrapper for generating a single pdf for multiple contexts from an odt template.
 
 == 1. Basics
