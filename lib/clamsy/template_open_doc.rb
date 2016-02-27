@@ -18,7 +18,7 @@ module Clamsy
     end
 
     def render(context)
-      File.copy(@template_doc, (file = tmp_doc(context)).path)
+      FileUtils.copy(@template_doc, (file = tmp_doc(context)).path)
       OpenDoc.new(file, @template_workers, context).transform
     end
 
@@ -27,13 +27,13 @@ module Clamsy
       def tmp_doc(context)
         @template_doc_suffix ||= ".#{@template_doc.to_s.split('.').last}"
         uid = Digest::MD5.hexdigest(Time.now.to_s + context.to_s)
-        tmp_file([uid, @template_doc_suffix])
+        FileSystem.tmp_file([uid, @template_doc_suffix])
       end
 
       def initialize_template_workers
         begin
           OpenDoc.per_content_entry(@template_doc) \
-            {|@entry| (@template_workers_cache ||= {})[@entry.to_s] = template_worker }
+            {|entry| (@template_workers_cache ||= {})[entry.to_s] = template_worker(entry) }
           @template_workers = lambda {|entry| @template_workers_cache[entry.to_s] }
         rescue Zip::ZipError
           raise TemplateDocIsCorruptedError.new \
@@ -41,12 +41,12 @@ module Clamsy
         end
       end
 
-      def template_worker
-        file, content = FileSystem.tmp_file, @entry.get_input_stream.read
-        File.open(file.path, 'w') {|f| f.write(content) }
+      def template_worker(entry)
+        file, content = FileSystem.tmp_file, entry.get_input_stream.read
+        File.open(file.path, "w:#{Encoding.default_external}") {|f| f.write(content.force_encoding(Encoding.default_external)) }
         worker = Tenjin::Template.new(file.path)
         check_worker_has_valid_syntax(worker = Tenjin::Template.new(file.path))
-        enhance_worker_with_picture_paths(worker, content)
+        enhance_worker_with_picture_paths(worker, content, entry)
       end
 
       def check_worker_has_valid_syntax(worker)
@@ -61,14 +61,14 @@ module Clamsy
       end
 
 
-      def enhance_worker_with_picture_paths(worker, content)
+      def enhance_worker_with_picture_paths(worker, content, entry)
         begin
           class << worker ; attr_accessor :picture_paths ; end
           worker.picture_paths = OpenDoc.extract_picture_paths(content)
           worker
         rescue Nokogiri::XML::SyntaxError
           raise TemplateDocContentIsCorruptedError.new \
-            "Template doc content '#{@template_doc}'/'#{@entry.to_s}' is corrupted."
+            "Template doc content '#{@template_doc}'/'#{entry.to_s}' is corrupted."
         end
       end
 
@@ -89,6 +89,7 @@ module Clamsy
       end
 
       def self.string_to_xml_doc(string)
+        return Nokogiri::XML('') if string.empty?
         Nokogiri::XML(string.gsub(':','')) do |config|
           config.options = Nokogiri::XML::ParseOptions::STRICT
         end
@@ -108,9 +109,9 @@ module Clamsy
       end
 
       def transform
-        OpenDoc.per_content_entry(@file.path) do |@entry|
-          @entry.zip.get_output_stream(@entry.to_s) do |@io|
-            replace_texts ; replace_pictures
+        OpenDoc.per_content_entry(@file.path) do |entry|
+          entry.zip.get_output_stream(entry.to_s) do |io|
+            replace_texts(entry, io) ; replace_pictures(entry, io)
           end
         end
         @file
@@ -118,9 +119,9 @@ module Clamsy
 
       private
 
-        def replace_texts
+        def replace_texts(entry, io)
           begin
-            @io.write(content = @workers[@entry].render(@context))
+            io.write(content = @workers[entry].render(@context))
             OpenDoc.string_to_xml_doc(content)
           rescue Nokogiri::XML::SyntaxError
             raise Clamsy::RenderedDocContentIsCorruptedError.new \
@@ -128,10 +129,10 @@ module Clamsy
           end
         end
 
-        def replace_pictures
+        def replace_pictures(entry, io)
           (@context[:_pictures] || {}).each do |name, src_path|
-            (dest_path = @workers[@entry].picture_paths[:"#{name}"]) \
-              && @entry.zip.replace(dest_path, src_path)
+            (dest_path = @workers[entry].picture_paths[:"#{name}"]) \
+              && entry.zip.replace(dest_path, src_path)
           end
         end
 

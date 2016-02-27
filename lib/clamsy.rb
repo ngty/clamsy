@@ -1,5 +1,13 @@
+# Still needed for gjman, but not used in clamsy anymore
+class File
+  def self.move(from, to)
+    FileUtils.move(from, to)
+  end
+end
+
 require 'gjman/pdf'
 require 'clamsy/tenjin'
+require 'clamsy/pdf'
 require 'clamsy/file_system'
 require 'clamsy/printers'
 require 'clamsy/template_open_doc'

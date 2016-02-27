@@ -11,8 +11,8 @@ begin
     gem.homepage = "http://github.com/ngty/clamsy"
     gem.authors = ["NgTzeYang"]
     gem.add_dependency "rubyzip", "= 0.9.4"
-    gem.add_dependency "gjman", "= 0.1.0"
-    gem.add_dependency "nokogiri", "= 1.4.1"
+    gem.add_dependency "gjman", ">= 0.1.0"
+    gem.add_dependency "nokogiri", ">= 1.4.3"
     gem.add_development_dependency "bacon", ">= 1.1.0"
     gem.add_development_dependency "eventmachine", ">= 0.12.10"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -66,7 +66,7 @@ rescue LoadError
   end
 end
 
-task :spec => :check_dependencies
+task :spec
 
 begin
   require 'reek/adapters/rake_task'
@@ -95,8 +95,8 @@ end
 
 task :default => :spec
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+require 'rdoc/task'
+RDoc::Task.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'

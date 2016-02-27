@@ -54,9 +54,10 @@ describe "Clamsy configuration" do
     },
     :windows => {},
     :java => {} # jruby
-  }.each do |$platform, configs|
-    describe "> default bundled config (#{$platform})" do
+  }.each do |platform, configs|
+    describe "> default bundled config (#{platform})" do
       before do
+        $platform = platform
         class << Clamsy::Configuration
           def ruby_platform ; "#{$platform}" ; end
           def new(file, is_base_config, default_configs={})
@@ -69,7 +70,7 @@ describe "Clamsy configuration" do
         should 'raise Clamsy::PlatformNotSupportedError' do
           lambda { Clamsy.configure {|config| 'watever' } }.
             should.raise(Clamsy::PlatformNotSupportedError).
-            message.should.equal("Platform '#{$platform}' is not supported (yet).")
+            message.should.equal("Platform '#{platform}' is not supported (yet).")
         end
       else
         configs.each do |name, value|
