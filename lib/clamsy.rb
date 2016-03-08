@@ -1,9 +1,19 @@
+require 'ftools'
+require 'fileutils'
+
+class File
+  def self.move(from, to)
+    FileUtils.move(from, to)
+  end
+end
+
 require 'gjman/pdf'
 require 'clamsy/tenjin'
 require 'clamsy/file_system'
 require 'clamsy/printers'
 require 'clamsy/template_open_doc'
 require 'clamsy/configuration'
+
 
 module Clamsy
 
